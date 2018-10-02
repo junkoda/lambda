@@ -10,7 +10,7 @@ import os
 import numbers
 import numpy as np
 import h5py
-
+import json
 
 from lambdalib.lambda_fitting import fit_lambda
 import lambdalib.power
@@ -29,6 +29,10 @@ _sim_default = 'wizcola' # can be changed by select_sim()
 
 # ...
 def _check_sim(sim):
+    """Check sim is a valid simulation,
+    check the directory exists under _data_dir
+    """
+    
     sims = sorted([x for x in os.listdir(_data_dir)
                    if os.path.isdir(_data_dir + '/' + x)])
 
@@ -40,22 +44,35 @@ def _check_sim(sim):
 #
 # Functions (API)
 #
-def info():
-    print('Project directory: ', _lambda_dir)
-    print('Data directory: ', _data_dir)
+def info(sim=None, isnp=None):
+    """
+    Return simulation info
+    """
 
-
-def sims():
-    """Returns a list of simulation data available, directories in the data directory"""
-    
-    return sorted([x for x in os.listdir(_data_dir)
+    if sim is None:
+        """Return a list of simulations"""
+        
+        print('Project directory: ', _lambda_dir)
+        print('Data directory: ', _data_dir)
+        
+        return sorted([x for x in os.listdir(_data_dir)
                    if os.path.isdir(_data_dir + '/' + x)])
 
-def select_sim(sim):
-    """Set the default simulation data"""
-    global _sim_default
-    _sim_default = sim
-    print('Set sim: ', _sim_default)
+    _check_sim(sim)    
+    
+    with open('%s/%s/param.json' % (_data_dir, sim)) as f:
+        d = json.load(f)
+
+    if isnp is None:
+        return d
+
+    if isinstance(isnp, int):
+        isnp = '%03d' % isnp
+
+    if not isnp in d['snapshot']:
+        raise ValueError('isnp %s is not available in %s' % (isnp, sim))
+    
+    return d['snapshot'][isnp]
 
 
 def load_lambda(sim, isnp):
