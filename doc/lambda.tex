@@ -18,9 +18,10 @@
 
 
 % Use Times fonts
-\usepackage{mathptmx}
+%\usepackage{mathptmx}
+%\renewcommand{\ttdefault}{pcr}
+\usepackage{newtxtext, newtxmath}
 \usepackage[scaled]{helvet}
-\renewcommand{\ttdefault}{pcr}
 \newcommand{\dbar}{\textit{\dj}}
 \newcommand{\Dbar}{\textit{\Dj}}
 \usepackage{bm}
@@ -38,6 +39,9 @@
 % Colours
 %
 \definecolor{Green}{rgb}{0.0, 0.5, 0.0}
+\definecolor{Blue}{rgb}{0.16, 0.32, 0.75}
+%\definecolor{Red}{rgb}{0.84, 0.04, 0.33}
+\definecolor{Red}{rgb}{0.82, 0.1, 0.26}
 
 \begin{document}
 
@@ -60,6 +64,12 @@
   \bm{s} = \bm{x} + u(\bm{x}) \, \hat{\bm{z}}
 \end{equation}
 
+$u(\bm{x})$ is the displacement field with plane-parallel along the $z$ axis.
+\begin{equation}
+  u(\bm{x}) = \frac{1}{aH} v_z(\bm{x}),
+\end{equation}
+where $\bm{v}(\bm{x})$ is the peculiar velocity.
+
 %
 % Decomposed power
 %
@@ -69,7 +79,7 @@
 
 \vspace{10mm}
 
-We decompose the redshift-space power spectrum to
+We decompose the redshift-space power spectrum as,
 %
 \begin{equation}
   P^s(\bm{k}) = P_{DD}(\bm{k}) + 2 P_{DU}(\bm{k}) + P_{UU}(\bm{k}).
@@ -187,14 +197,290 @@ Power spectra are defined as usual,
 \end{align}
 
 \vspace{10mm}
-The reality of $P_{DU}$,
+The reality of the cross-power spectrum,
 %
 \begin{equation}
-  P_{DU}(\bm{k}) = \left\langle D(\bm{k}) U(\bm{k})^* \right\rangle =
-  \left\langle D(\bm{k})^* U(\bm{k}) \right\rangle
+  \left\langle D(\bm{k}) U(\bm{k}')^* \right\rangle =
+  \left\langle D(\bm{k})^* U(\bm{k}') \right\rangle =
+  (2\pi)^3 \delta_D(\bm{k} - \bm{k}') P_{DU}(\bm{k})
 \end{equation}
 
 follows from the statistical parity invariance. 
+
+
+%
+% Taruya model
+%
+\newpage
+{\Huge \textbf{\textcolor{Red}{Taruya model}}}
+
+\vspace{5mm}
+
+Taruya model in the decomposed form is,\vspace{-2mm}
+\begin{align}
+  P_{DD}(k, \mu) &= b^2 \left[
+    P_{mm}(k) + A_{DD}(k, \mu) + B_{DD}(k, \mu)
+    \right] e^{- (fk\mu\sigma_v)^2},\\
+  %
+  P_{DU}(k, \mu) &= b \left[
+    f\mu^2 P_{m\theta}(k) + A_{DU}(k, \mu) + B_{DU}(k, \mu)
+    \right] e^{- (fk\mu\sigma_v)^2},\\
+  %
+  P_{DU}(k, \mu) &= \left[
+    f^2 \mu^4 P_{\theta\theta}(k) + A_{UU}(k, \mu) + B_{UU}(k, \mu)
+    \right] e^{- (fk\mu\sigma_v)^2},   
+\end{align}
+where $b$ is the linear bias and $m$ stands for matter.\\
+
+
+\textbf{$A$ terms}\vspace{-2mm}
+\begin{align}
+  A_{DD}(k, \mu) &= f\mu^2 A_{11}(k)\\
+  A_{DU}(k, \mu) &= \frac{1}{2} f^2 \mu^2 \left[
+                   A_{12}(k) + \mu^2 A_{22}(k) \right]\\
+  A_{UU}(k, \mu) &= f^3 \mu^4 \left[ A_{23}(k) + \mu^2 A_{33}(k) \right]
+\end{align}
+
+\textbf{$B$ terms}\vspace{-2mm}
+\begin{align}
+  B_{DD}(k, \mu) &= f^2 \mu^2 \left[ B^1_{11}(k) + \mu^2 B^2_{11} \right]\\
+  B_{DU}(k, \mu) &= -\frac{1}{2} f^3 \left[
+    \mu^2( B^1_{12} + B^1_{21} ) + \mu^4(B^2_{12} + B^2_{21})
+    + \mu^6(B^3_{12} + B^3_{21}) \right]\\
+  B_{UU}(k, \mu) &= f^4 \left[ \mu^2 B^1_{22} + \mu^4 B^2_{22} + \mu^6
+    B^3_{22} + \mu^8 B^4_{33}\right]
+\end{align}
+
+%
+% Taruya model
+%
+\newpage
+{\Huge \textbf{\textcolor{Green}{Streaming model}}}
+
+\vspace{5mm}
+
+\begin{equation}
+  P_{ab}(k, \mu) = \mathring{P}_{ab}(k, \mu) \exp \left[
+    \frac{A_{ab}}{\mathring{P}_{ab}}
+    - \frac{1}{2} \left( \frac{A_{ab}}{\mathring{P}_{ab}} \right)^2
+    + \frac{B_{ab}}{\mathring{P}_{ab}} - (f k \mu \sigma_{ab})^2
+    \right],
+\end{equation}
+where $a$, $b$ takes $D$ or $U$.
+
+$\mathring{P}_{ab}(\bm{k})$ are real-space quantities,
+\begin{align}
+  &\mathring{P}_{DD}(k) = P_{\delta\delta}(k) = b^2 P_{mm}(k),\\
+  &\mathring{P}_{DU}(k, \mu) = P_{\delta u'}(k, \mu) = b f\mu^2 P_{m\theta}(k),\\
+  &\mathring{P}_{UU}(k, \mu) = P_{u'u'}(k, \mu) = f^2\mu^4 P_{\theta\theta}(k),
+\end{align}
+$A_{ab}(k, \mu)$ and $B_{ab}(k, \mu)$ are same as the TNS model, and,
+%
+\begin{equation}
+  \sigma_{ab}^2(k, \mu) = \frac{1}{\mathring{P}_{ab}(k, \mu)}
+  \int \! d^3 r e^{-i\bm{k}\cdot\bm{r}} 
+  \mathring{\xi}_{ab}(\bm{r}) \left[ \sigma^2_v - \xi_{uu}(\bm{r}) \right],
+\end{equation}
+%
+where $\xi$'s are correlation functions,
+%
+\begin{align}
+  \mathring{\xi}_{DD}(\bm{r}) &= \xi_{\delta\delta}(\bm{r}) = \left\langle
+  \delta(\bm{x}) \delta(\bm{y}) \right\rangle\\
+  \mathring{\xi}_{DU}(\bm{r}) &= \xi_{\delta u'}(\bm{r}) = \left\langle
+  \delta(\bm{x}) u'(\bm{y}) \right\rangle\\
+  \mathring{\xi}_{UU}(\bm{r}) &= \xi_{u'u'}(\bm{r}) = \left\langle
+  u'(\bm{x}) u'(\bm{y}) \right\rangle\\
+  \xi_{uu}(\bm{r}) &= \left\langle
+  u(\bm{x}) u(\bm{y}) \right\rangle\\
+\end{align}
+  
+
+
+\newpage
+\underline{Derivation of the streaming model}\vspace{5mm}
+
+Define generating functions, and apply cumulant expansion,
+\begin{align}
+  \mathcal{M}^{ab}(\bm{k}, J) &\equiv
+  \int \!\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
+  \phi_a(\bm{x}) \phi_b(\bm{y}) e^{-iJ\Delta u} \right\rangle\\
+  %
+  &= \exp\left[
+    \mathcal{C}_0^{ab}(\bm{k}) +
+    \mathcal{C}_1^{ab}(\bm{k}) J +
+    \frac{1}{2} \mathcal{C}_2^{ab}(\bm{k}) J^2 + \cdots
+    \right],
+\end{align}
+where $a$,$b$ takes $D$ or $U$, $\Delta u \equiv u(\bm{x}) - u(\bm{y})$, and,
+\begin{align}
+  \phi_D(\bm{x}) &= \delta(\bm{x}),\\
+  \phi_U(\bm{x}) &= u'(\bm{x}).
+\end{align}
+$J$ is a free real number, which reproduces the decomposed power when it is equal to $k_z$,
+\begin{equation}
+  P_{ab}(\bm{k}) = \mathcal{M}_{ab}(\bm{k}, k_z).
+\end{equation}
+%
+The cumulant expansion is a Tylor expansion of $\ln \mathcal{M}_{ab}$ in the powers of $J$,
+%
+\begin{equation}
+  \mathcal{C}_{ab}^{[n]} = \frac{d^n}{dJ^n}
+  \ln \mathcal{M}_{ab}(\bm{k}, J) \Big|_{J=0}
+\end{equation}
+
+\begin{equation}
+  C_{ab}^{[0]}(\bm{k}) =
+  \ln M_{ab}(\bm{k}, 0) \equiv \ln \mathring{P}_{ab}(\bm{k})
+\end{equation}
+
+\begin{align}
+  C_{ab}^{[1]}(\bm{k}) &= \frac{1}{\mathring{P}_{ab}(\bm{k})}
+  \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
+  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u) \right\rangle\\
+\end{align}
+
+\begin{align}
+  A_{ab}(\bm{k}) \equiv
+  \frac{1}{\mathring{P}_{ab}(\bm{k})}
+  \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
+  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i k_z \Delta u) \right\rangle\\
+\end{align}
+
+\begin{align}
+  C_{ab}^{[2]}(\bm{k}) &=
+  - \left[ \frac{C_{ab}^{[1]}}{\mathring{P}_{ab}(\bm{k})} \right]^2
+  + \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
+  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u)^2 \right\rangle
+\end{align}
+
+We compute the leading order of this second cumulant using linear
+pertubation theory,
+\begin{equation}
+  \left\langle
+  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u)^2 \right\rangle
+  \approx
+  2 \left\langle \phi_a^\mathrm{lin}(\bm{x})
+                  (-i\Delta u^\mathrm{lin}) \right\rangle
+    \left\langle \phi_b^\mathrm{lin}(\bm{y})
+                  (-i\Delta u^\mathrm{lin}) \right\rangle
+  - \left\langle \phi_a^\mathrm{lin}(\bm{x})
+                 \phi_a^\mathrm{lin}(\bm{y}) \right\rangle
+  \left\langle (\Delta u^\mathrm{lin})^2 \right\rangle,
+\end{equation}
+using a property of Gaussian random variables.
+
+
+\begin{equation}
+  B_{ab}(\bm{k}) \equiv
+  \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
+  \left\langle \phi_a^\mathrm{lin}(\bm{x})
+                  (-i\Delta u^\mathrm{lin}) \right\rangle
+  \left\langle \phi_b^\mathrm{lin}(\bm{y})
+                  (-i\Delta u^\mathrm{lin}) \right\rangle
+\end{equation}
+
+%
+% Basics
+%
+%\newpage
+%{\Huge \textbf{\textcolor{Blue}{Basics}}}
+
+%
+% Notation
+%
+\newpage
+{\Huge \textbf{\textcolor{Blue}{Two point statistics}}}
+\vspace{5mm}
+
+\textsc{Fields}
+%
+\begin{align}
+  u(\bm{x}) &= \frac{1}{aH} v_z(\bm{x})\\
+  u'(\bm{x}) &= -\frac{\partial}{\partial z} u(\bm{x})\\
+  \theta(\bm{x}) &= - \frac{1}{aHf} \bm{\nabla}\cdot \bm{v}(\bm{x})
+\end{align}
+
+\textsc{Two-point correlation function}
+\begin{align}
+  \xi_{\mathtt{ab}}(\bm{r}) &= \left\langle \mathtt{a}(\bm{x}) \mathtt{b}(\bm{y})
+                             \right\rangle
+\end{align}
+where $\bm{r} = \bm{x} - \bm{y}$.
+$\texttt{a}(\bm{x})$, $\texttt{b}(\bm{x})$\\
+
+
+\textsc{Power spectrum}
+\begin{equation}
+  \left\langle \hat{\mathtt{a}}(\bm{k}) \hat{\mathtt{b}}(\bm{k}') \right\rangle
+  = (2\pi)^3 \delta_D(\bm{k}-\bm{k}') P_{\mathtt{ab}}(\bm{k})
+\end{equation}
+
+
+The displacement field can be solved algebraicly in Fourier space:
+\begin{align}
+  \hat{u}(\bm{k}) &= -\frac{ifk_z}{k^2} \hat{\theta}(\bm{x})\\
+  \hat{u}'(\bm{k}) &= f\mu^2
+\end{align}
+
+
+\begin{align}
+  P_{uu}(\bm{k}) &= f^2\mu^2 P_{\theta\theta}(k)/k^2\\
+  P_{\delta u'}(\bm{k}) &= f \mu^2 P_{\delta \theta}(k)\\
+  P_{u' u'}(\bm{k}) &= f \mu^2 P_{\delta \theta}(k)\\
+\end{align}
+
+
+\newpage
+
+\begin{equation}
+  \mathcal{P}_2(\mu) = \frac{1}{2}\left( 3 \mu^2 - 1 \right)
+\end{equation}
+
+%
+% Notation
+%
+\newpage
+{\Huge \textbf{\textcolor{Blue}{Symbols}}}
+
+\begin{center}
+  \begin{tabular}{ll}
+    symbols & \\
+    \hline
+    $a$ & Scale factor, $a=1$ at present\\
+    $H$ & Hubble paramter (time dependent)\\
+    $D$ & Linear growth factor\\
+    $f$ & Linear growth rate $f = d \ln D(a)/d\ln a$\\
+    $\delta(\bm{x})$ & Density contrast field of matter, haloes, or galaxies\\
+    
+    $\theta(\bm{x})$ & Velocity divergence field
+    $\theta(\bm{x}) = -\bm{\nabla} \cdot \bm{v}(\bm{x})$\\
+    $u(\bm{x})$ & Redshift-space displacement $u(\bm{x}) = v_z(\bm{x})/(aH)$\\
+    %
+    $\bm{r}$ & Separation vector $\bm{r} = \bm{x} - \bm{y}$\\
+    $\Delta u$ & Pairwise RSD displacement $\Delta u = u(\bm{x}) - u(\bm{y})$\\
+    $k$ & Magnitude of the wavevector $k = |\bm{k}|$\\
+    $\mu$ & $\mu=k_z/k$\\
+    \hline
+  \end{tabular}
+\end{center}
+
+%
+%
+%
+\newpage
+
+{\Huge \textbf{\textcolor{Blue}{Basics}}}
+
+\begin{equation}
+  \theta(\bm{x}) \equiv - \frac{1}{aHf} \bm{\nabla}\cdot\bm{v}(\bm{x})
+\end{equation}
+
+Inverting this relation in Fourier space assuming curl-free velocity
+field gives,
+\begin{equation}
+  \hat{u}(\bm{k}) = \frac{ifk_z}{k^2} \hat{\theta}(\bm{k})
+\end{equation}
 
 %
 % Parity of power spectrum
