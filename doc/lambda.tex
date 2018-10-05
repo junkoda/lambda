@@ -4,8 +4,6 @@
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage{amsthm} % proof
 \usepackage[T1]{fontenc}
-%\usepackage{textcomp}
-%\usepackage{ascmac}
 \usepackage{bm}
 \usepackage{xcolor}
 \usepackage{sectsty} % change section colours
@@ -20,8 +18,6 @@
 
 
 % Use Times fonts
-%\usepackage{mathptmx}
-%\renewcommand{\ttdefault}{pcr}
 \usepackage{newtxtext, newtxmath}
 \usepackage[scaled]{helvet}
 
@@ -200,8 +196,7 @@ $\blacktriangleright$ \hyperlink{sec:decomposed-power-derivation}{Derivation}
 
 %
 \newpage
-%\hypertarget{link:decomposed-power-derivation}{The derivation of power spectrum decomposition}
-\paragraph{Derivation of power-spectrum decomposition}
+\subsection{Derivation of power-spectrum decomposition}
 \label{sec:decomposed-power-derivation}\quad\\
 
 The redshift-space density contrast in Fourier space is,
@@ -297,15 +292,15 @@ Taruya model in the decomposed form is,\vspace{-2mm}
 \begin{align}
   P_{DD}(k, \mu) &= b^2 \left[
     P_{mm}(k) + A_{DD}(k, \mu) + B_{DD}(k, \mu)
-    \right] e^{- (fk\mu\sigma_v)^2},\\
+    \right] e^{- (k\mu\sigma_v)^2},\\
   %
   P_{DU}(k, \mu) &= b \left[
     f\mu^2 P_{m\theta}(k) + A_{DU}(k, \mu) + B_{DU}(k, \mu)
-    \right] e^{- (fk\mu\sigma_v)^2},\\
+    \right] e^{- (k\mu\sigma_v)^2},\\
   %
   P_{DU}(k, \mu) &= \left[
     f^2 \mu^4 P_{\theta\theta}(k) + A_{UU}(k, \mu) + B_{UU}(k, \mu)
-    \right] e^{- (fk\mu\sigma_v)^2},   
+    \right] e^{- (k\mu\sigma_v)^2},   
 \end{align}
 where $b$ is the linear bias and $m$ stands for matter.\\
 
@@ -375,7 +370,9 @@ where $\xi$'s are correlation functions,
 
 
 \newpage
-\underline{Derivation of the streaming model}\vspace{5mm}
+\subsection{Derivation of the streaming model}
+
+%\vspace{5mm}
 
 Define generating functions, and apply cumulant expansion,
 \begin{align}
@@ -458,7 +455,7 @@ using a property of Gaussian random variables.
 \end{equation}
 
 %
-% Numerical integration
+% Numerical integration (xi)
 %
 \clearpage
 \subsection{Numerical integration of the streaming model}
@@ -467,7 +464,7 @@ using a property of Gaussian random variables.
   \xi_\ell(r) \equiv 4\pi (-i)^\ell \int\! k^2 dk \, j_\ell(kr) \bar{P}(k)
 \end{equation}
 
-\subsubsection{Using correlation function}
+\subsubsection{Integrating the correlation function}
 
 %
 % DD
@@ -532,23 +529,52 @@ Finiteness as $\mu \rightarrow 0$?
     \frac{18}{35} \mathcal{P}_4(x)
 \end{equation}
 
+\clearpage
+
+%
+% Numerical integration (xi)
+%
+\clearpage
+\subsubsection{Integrating the power spectrum}
+
+\paragraph{DD}
+
+\begin{align}
+  C_{DD}(k, \mu) &=
+    \int\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
+    \bar{\xi}_{DD}(\bm{r}) \bar{\xi}_{UU}d^3 r\\
+  &= f^2 \int \! \dbar^3 q \, \bar{P}(|\bm{k} - \bm{q}|) \mu_q^2 P(q)/q^2
+\end{align}
+
+\clearpage
+\subsubsection{Understanding $\sigma_{ab}$}
+
+The integral in $\sigma_{ab}$ is an convolution between $\mathring{P}_{ab}$ and
+$P_{uu}$,
+%
+\begin{align}
+  I_{ab} &\equiv \frac{1}{\mathring{P}_{ab}}
+  \int \! d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
+  \xi_{ab}(\bm{r}) \xi_{uu}(\bm{r})\\
+  &= \frac{P_{ab} * P_{uu}(\bm{k})}{\mathring{P}_{ab}(\bm{k})}
+\end{align}
+%
+This is the ratio of the smoothed $P_{uu}$ with the kernel $P_{uu}$
+
+
 %
 % Basics
 %
 \sectionfont{\sffamily\Huge\color{Blue}\selectfont}
 \subsectionfont{\sffamily\color{Blue}\selectfont}
+\subsubsectionfont{\sffamily\color{Blue}\selectfont}
 \paragraphfont{\sffamily\color{Blue}\selectfont}
-
-%\newpage
-%{\Huge \textbf{\textcolor{Blue}{Basics}}}
 
 %
 % Notation
 %
 
-\newpage
-%{\Huge \textbf{\textcolor{Blue}{Two point statistics}}}
-%\vspace{5mm}
+\clearpage
 \section{Two-point statistics}
 
 \paragraph{Fields}
@@ -607,18 +633,10 @@ assuming the vorticity of the velocity field is negligible,
 %
 where $\bm{r} = \bm{x} - \bm{y}$. The ensemble average is a function
 of $\bm{r}$ from statistical translational invariance; there is no
-special origin $\bm{x} = 0$ in the Universe.
-
-
-
-
-
-%
-which gives the following power spectra,
-%
+special origin $\bm{x} = 0$ in the Universe.\\
 
 \begin{equation}
-  \xi_{\delta\delta}(r) = 4\pi \int_0^\infty \! dr\,
+  \xi_{\delta\delta}(r) = 4\pi \int_0^\infty \! k^2 dk\,
   j_0(kr) P_{\delta\delta}(k)
 \end{equation}
 
@@ -629,8 +647,33 @@ which gives the following power spectra,
   \xi_{uu(2)} &= -\frac{8\pi}{3} \int_0^\infty \! dk\,
                    j_2(kr) P_{\theta\theta}(k)
 \end{align}
+
+\clearpage
+\subsubsection{Linear correlation functions}
+\textsc{Define},
+%
+\begin{equation}
+  \xi_{\ell}(r)
+  \equiv 4\pi (-i)^\ell \int_0^\infty \! k^2 dk \, j_\ell(kr) \bar{P}(k)
+\end{equation}
+
+
+The linear correlation functions are,
+\begin{align}
+  &\xi_{mm}(r) = \xi_0(r),\\
+  &\xi_{\delta u'}(r)/f = \frac{1}{3} \xi_0(r) + \frac{2}{3} \xi_2(r),\\
+  &\xi_{u'u'}(r)/f^2 = \frac{1}{5} \xi_0(r) + \frac{4}{7} \xi_2(r)
+                      +\frac{8}{35} \xi_4(r).
+\end{align}
+
+\begin{align}
+  x^2 &= \frac{1}{3} \mathcal{P}_0(x) + \frac{2}{3} \mathcal{P}_2(x)\\
+  x^4 &= \frac{1}{5}\mathcal{P}_0(x)
+  + \frac{4}{7} \mathcal{P}_2(x)
+  + \frac{8}{35} \mathcal{P}_4(x)
+\end{align}
   
-\newpage
+\clearpage
 \begin{equation}
   \mathcal{P}_2(\mu) = \frac{1}{2}\left( 3 \mu^2 - 1 \right)
 \end{equation}
@@ -642,7 +685,8 @@ which gives the following power spectra,
 
 
 
-\newpage
+
+\clearpage
 \section{Math}
 
 \subsection{Multipole moments}
@@ -661,13 +705,13 @@ Multipole moments of a power spectrum $P(k, \mu)$ are,
 \end{equation}
 where $\mu = k_z/k$, and $\mathcal{P}_\ell$ is the \hyperref[sec:legendre]{Legendre polynomial}.\\
 
-\vspace{5mm}
-Multipole moments $\xi_\ell(r, \nu)$ and $P_\ell(k, \nu)$ are related though the spherical-Bessel transform:
+\vspace{5mm} Multipole moments $\xi_\ell(r, \nu)$ and $P_\ell(k, \nu)$
+are related through the spherical-Bessel transform:
 %
 \begin{align}
-  &P_\ell(k) = 4\pi \, (-i)^\ell \!\int_0^\infty j_\ell(kr) \xi_\ell(r) \,dr
+  &P_\ell(k) = 4\pi \, (-i)^\ell \!\int_0^\infty \! j_\ell(kr) \xi_\ell(r) r^2 dr
   \label{eq:spherical-bessel-dr}\\
-  &\xi_\ell(r) = \frac{i^\ell}{2\pi^2} \int_0^\infty \,j_\ell(kr) P_\ell(k) \,dk
+  &\xi_\ell(r) = \frac{i^\ell}{2\pi^2} \int_0^\infty \! j_\ell(kr) P_\ell(k) k^2 dk
   \label{eq:spherical-bessel-dk}
 \end{align}
 %
@@ -687,38 +731,82 @@ Apply the spherical-harmonic addition theorem,
   i^\ell j_\ell(kr) Y_\ell^m(\hat{\bm{k}}) Y_\ell^m(\hat{\bm{r}})^*
 \end{equation}
 %
-and,
-%
-\begin{equation}
-  Y_\ell^0(\theta, \varphi) = \sqrt{\frac{2\ell + 1}{4\pi}} P_\ell(\cos\theta)
-\end{equation}
-%
 to the Fourier transform,
 %
 \begin{align}
-  P(k, \mu) = \int \! d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \xi(r, \nu),\\
-  \xi(r, \nu) = \int \! d^3 k \, e^{i\bm{k}\cdot\bm{r}} P(k, \mu).
+  P(k, \mu) = \int \!\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \xi(r, \nu),\\
+  \xi(r, \nu) = \int \!\! \frac{d^3 k}{(2\pi)^3} \, e^{i\bm{k}\cdot\bm{r}} P(k, \mu).
 \end{align}
 %
+Then,
+%
 \begin{equation}
-  \int\! Y_\ell^m(\theta, \varphi) d \varphi = 0 \mbox{ for $m \neq 0$}
+  \int_0^{2\pi} \! Y_\ell^m(\theta, \varphi) \, d \varphi = 0
+  \mbox{ for $m \neq 0$},
 \end{equation}
-and the orthognality of the Legendre polynomials give equations~(\ref{eq:spherical-bessel-dr}--\ref{eq:spherical-bessel-dk}).
+%
+\begin{equation}
+  Y_\ell^0(\theta, \varphi) = \sqrt{\frac{2\ell + 1}{4\pi}} P_\ell(\cos\theta),
+\end{equation}
+%
+and the orthognality of the Legendre polynomials
+(equation~\ref{eq:legendre-orthognal}) give
+equations~(\ref{eq:spherical-bessel-dr}--\ref{eq:spherical-bessel-dk}).
 
 \clearpage
 \subsection{Legendre polynomials}
 \label{sec:legendre}
 
+\vspace{4mm}
+
 \paragraph{Orthognality}
   
 \begin{equation}
-  \int_{-1}^1 \mathcal{P}_\ell(x) \mathcal{P}_n(x) \, dx =
-    \frac{2}{2\ell + 1} \delta_{\ell m}
+  \label{eq:legendre-orthognal}
+  \int_{-1}^1 \mathcal{P}_\ell(x) \mathcal{P}_m(x) \, dx =
+    \frac{2}{2\ell + 1} \delta_{\ell m}.
 \end{equation}
 
+\clearpage
+\subsection{Integration}
+\label{sec:integration}
+
+\vspace{5mm}
+
+\begin{lemma}
+  \begin{equation}
+    \label{eq:lemma-integral}
+    \int \! d\Omega_q \mathcal{P}_\ell(q_z/q) F(k, q, x)
+    = \mathcal{P}_\ell(\mu)
+      \times 2\pi \int_{-1}^1 \! dx \, F(k, q, x) \mathcal{P}_\ell(x)
+  \end{equation}
+  where $d\Omega_q$ is the angular integral in the spherical coodinate
+  of $\bm{q}$,
+  \begin{align}
+    &d^3 q = q^2 dq d\Omega_q,\\
+    &x \equiv \hat{k}\cdot\hat{\bm{q}},
+  \end{align}
+  and $F$ is an arbitrary
+  function of $k$, $q$, and $x$.
+\end{lemma}
+
+\begin{proof}
+Let us choose a spherical coordinate system of $\bm{q}$, $(q, \theta,
+\varphi)$ such that the $\theta = 0$ direction is $\hat{\bm{k}}$,
+which gives $x = \hat{\bm{k}}\cdot\bm{\bm{q}} = \cos\theta$. We can expand
+the function $F(k, q, x)$ with the Legendre polynomials because it
+only depens on $\theta$, not on $\varphi$,
+\begin{align}
+  &F(k, q, x) = \sum_n F_{n}(k, q) \mathcal{P}_n(\cos\theta),\\
+  &F_{n}(k, q) = \frac{2n + 1}{2} \int_{-1}^1 \! dx \,\mathcal{P}_n(x) F(k, q, x)
+\end{align}
+The lemma immediatly follows from substuting these equaions to the
+left-hand side of equation~(\ref{eq:lemma-integral}) and use the
+orthognality of the Legendre polynomials.
+\end{proof}
 
 
-\newpage
+\clearpage
 \section{Basic cosmology}
 
 Scale factor,
@@ -753,7 +841,7 @@ Linear growth rate,
 %
 % Notation
 %
-\newpage
+\clearpage
 \section{Symbols}
 
 \begin{center}
@@ -763,6 +851,9 @@ Linear growth rate,
     $j_\ell$ & Spherical Bessel function\\
     $\mathcal{P}_\ell$ & Legendre polynomial\\
     $Y_\ell^m$ & Spherical harmonics\\
+    $\delta_D$ & Dirace delta function\\
+    $\delta_{ij}$ & Kronecker delta\\
+    $\dbar^3 k$ & $\dbar^3 k = d^3 k / (2\pi)^3$\\ 
     \hline
     %
     $a$ & Scale factor, $a=1$ at present\\
