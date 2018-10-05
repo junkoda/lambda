@@ -3,7 +3,7 @@ all: lambda.pdf
 %.pdf: %.tex 
 	pdflatex $<
 	@grep -e 'may have changed' $(basename $<).log && rm $@; $(MAKE) $@ || echo "done."
-	sh copy.sh
+	test -f copy.sh && sh copy.sh
 
 .PHONY: clean
 
