@@ -5,11 +5,9 @@
 \usepackage{amsthm} % proof
 \usepackage[T1]{fontenc}
 %\usepackage{textcomp}
-%\usepackage{currvita}
 %\usepackage{ascmac}
 \usepackage{bm}
 \usepackage{xcolor}
-%\usepackage{titlesec}
 \usepackage{sectsty} % change section colours
 \usepackage{lipsum}
 \usepackage{titlesec}
@@ -79,6 +77,9 @@
 \tableofcontents
 
 \sectionfont{\sffamily\Huge\color{Green}\selectfont}
+\subsectionfont{\sffamily\color{Green}\selectfont}
+\subsubsectionfont{\sffamily\color{Green}\selectfont}
+\paragraphfont{\sffamily\color{Green}\selectfont}
 
 %
 % Redshift-space distortions
@@ -96,6 +97,57 @@ $u(\bm{x})$ is the displacement field with plane-parallel along the $z$ axis.
   u(\bm{x}) = \frac{1}{aH} v_z(\bm{x}),
 \end{equation}
 where $\bm{v}(\bm{x})$ is the peculiar velocity.
+
+\vspace{5mm}
+
+Mass conservation,
+%
+\begin{equation}
+  [1 + \delta(\bm{x})] d^3 x = [1 + \delta^s(\bm{s})] d^3 s,
+\end{equation}
+%
+gives a formula for redshift-space density contrast,
+%
+\begin{equation}
+  \label{eq:delta-s}
+  \delta_D(\bm{k}) + \hat{\delta}^s(\bm{k})
+  = \int \! d^3 x \, e^{-i\bm{k}\cdot\bm{x}} [1 + \delta(\bm{x})]
+    e^{-ik_z u(\bm{x})},
+\end{equation}
+%
+and redshift-space power spectrum,
+%
+\begin{equation}
+  P^s(\bm{k}) = \int \! d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
+  \Big\langle
+      [1 + \delta(\bm{x})][1 + \delta(\bm{y})]
+      e^{-ik_z [u(\bm{x}) - u(\bm{y})]}\Big\rangle.
+\end{equation}
+$\delta_D$ is the Dirac delta function.
+
+
+\newpage
+\subsection{Linear RSD}
+
+Expanding equation~(\ref{eq:delta-s}) to the linear order in $u$ gives,
+%
+\begin{align}
+  \delta^s(\bm{k}) &= \hat{\delta}(\bm{k}) - ik_z \hat{u}(\bm{k})\\
+   &= \hat{\delta}(\bm{k}) + f\mu^2 \hat{\theta}(\bm{k})
+\end{align}
+%
+We call this approximation as the \textit{linear RSD}, which is valid
+when higher orders of $k_z u(\bm{x})$ are negligible, but do not
+assume that $u(\bm{k})$ or $\hat{\theta}(\bm{k})$ are linear Gaussian
+fields; $\delta$ and $\theta$ can be non-linear fields.\\
+
+The \textit{linear} RSD power spectrum is,
+%
+\begin{equation}
+  P^s(\bm{k}) = P_{\delta\delta}(k) +
+  2f\mu^2 P_{\delta \theta}(\bm{k}) + f^2\mu^4 P_{\theta\theta}(\bm{k}).
+\end{equation}
+
 
 %
 % Decomposed power
@@ -144,13 +196,14 @@ averages gives a function of $\bm{r}$ due to the statistical
 translational invariance.
 
 \vspace{10mm}
-$\blacktriangleright$ \hyperlink{link:decomposed-power-derivation}{Derivation}
+$\blacktriangleright$ \hyperlink{sec:decomposed-power-derivation}{Derivation}
 
 %
 \newpage
-\hypertarget{link:decomposed-power-derivation}{The derivation of power spectrum decomposition}
+%\hypertarget{link:decomposed-power-derivation}{The derivation of power spectrum decomposition}
+\paragraph{Derivation of power-spectrum decomposition}
+\label{sec:decomposed-power-derivation}\quad\\
 
-\vspace{10mm}
 The redshift-space density contrast in Fourier space is,
 %
 \begin{equation}
@@ -482,38 +535,34 @@ Finiteness as $\mu \rightarrow 0$?
 %
 % Basics
 %
+\sectionfont{\sffamily\Huge\color{Blue}\selectfont}
+\subsectionfont{\sffamily\color{Blue}\selectfont}
+\paragraphfont{\sffamily\color{Blue}\selectfont}
+
 %\newpage
 %{\Huge \textbf{\textcolor{Blue}{Basics}}}
 
 %
 % Notation
 %
-\newpage
-{\Huge \textbf{\textcolor{Blue}{Two point statistics}}}
-\vspace{5mm}
 
-\textsc{Fields} $\mathtt{a}(\bm{x})$, $\mathtt{b}(\bm{x})$ can be the following,
+\newpage
+%{\Huge \textbf{\textcolor{Blue}{Two point statistics}}}
+%\vspace{5mm}
+\section{Two-point statistics}
+
+\paragraph{Fields}
+$\mathtt{a}(\bm{x})$, $\mathtt{b}(\bm{x})$ can be the following,
+%
 \begin{align}
-  \delta(\bm{x}) &\phantom{=\,} \mbox{Density contrast field of matter, halo, or galaxies}\\
+  \delta(\bm{x}) &\phantom{=\,} \mbox{Density contrast field of matter, halo, or galaxies;}\\
+            &\phantom{=\,} \mbox{we use $m$ when $\delta$ is explicitly the matter field}\\
   u(\bm{x}) &= \frac{1}{aH} v_z(\bm{x})\\
   u'(\bm{x}) &= -\frac{\partial}{\partial z} u(\bm{x})\\
   \theta(\bm{x}) &= - \frac{1}{aHf} \bm{\nabla}\cdot \bm{v}(\bm{x})
 \end{align}
 
-\textsc{Two-point correlation function}
-\begin{align}
-  \xi_{\mathtt{ab}}(\bm{r}) &= \left\langle \mathtt{a}(\bm{x}) \mathtt{b}(\bm{y})
-                             \right\rangle
-\end{align}
-where $\bm{r} = \bm{x} - \bm{y}$.\\
-
-
-\textsc{Power spectrum}
-\begin{equation}
-  \left\langle \hat{\mathtt{a}}(\bm{k}) \hat{\mathtt{b}}(\bm{k}')^* \right\rangle
-  = (2\pi)^3 \delta_D(\bm{k}-\bm{k}') P_{\mathtt{ab}}(\bm{k})
-\end{equation}
-
+\vspace{5mm}
 The field $\hat{\texttt{a}}(\bm{k})$ is
 the Fourier transform of $\texttt{a}(\bm{x})$, 
 \begin{equation}
@@ -521,21 +570,52 @@ the Fourier transform of $\texttt{a}(\bm{x})$,
   \int\! d^3 x \, e^{-i\bm{k}\cdot\bm{x}} \texttt{a}(\bm{x})
 \end{equation}
 
-
-
-The displacement field can be solved algebraicly in Fourier space:
+The $u$ field can be solved algebraicly in Fourier space:
+%
 \begin{align}
   &\hat{u}(\bm{k}) = -\frac{ifk_z}{k^2} \hat{\theta}(\bm{x}),\\
   &\hat{u}'(\bm{k}) = f\mu^2 \hat{\theta}(\bm{k}),
 \end{align}
 %
-which gives the following power spectra,
+assuming the vorticity of the velocity field is negligible,
 %
+\begin{equation}
+  \bm{\nabla} \times \bm{v}(\bm{x}) = 0.
+\end{equation}
+
+\clearpage
+\subsection{Power spectrum}
+\begin{equation}
+  \left\langle \hat{\mathtt{a}}(\bm{k}) \hat{\mathtt{b}}(\bm{k}')^* \right\rangle
+  = (2\pi)^3 \delta_D(\bm{k}-\bm{k}') P_{\mathtt{ab}}(\bm{k})
+\end{equation}
+
 \begin{align}
   &P_{uu}(\bm{k}) = f^2\mu^2 P_{\theta\theta}(k)/k^2,\\
   &P_{\delta u'}(\bm{k}) = f \mu^2 P_{\delta \theta}(k),\\
   &P_{u' u'}(\bm{k}) = f \mu^2 P_{\delta \theta}(k).\\
 \end{align}
+
+
+\clearpage
+\subsection{Two-point correlation function}
+
+\begin{equation}
+  \xi_{\mathtt{ab}}(\bm{r}) = \left\langle \mathtt{a}(\bm{x}) \mathtt{b}(\bm{y})
+                             \right\rangle
+\end{equation}
+%
+where $\bm{r} = \bm{x} - \bm{y}$. The ensemble average is a function
+of $\bm{r}$ from statistical translational invariance; there is no
+special origin $\bm{x} = 0$ in the Universe.
+
+
+
+
+
+%
+which gives the following power spectra,
+%
 
 \begin{equation}
   \xi_{\delta\delta}(r) = 4\pi \int_0^\infty \! dr\,
@@ -560,57 +640,131 @@ which gives the following power spectra,
 \end{equation}
 
 
+
+
 \newpage
-{\Huge \textbf{\textcolor{Blue}{Math}}}
-    
-\vspace{2mm}
-{\Large \textbf{\textcolor{Blue}{Multipole moments}}}    
+\section{Math}
+
+\subsection{Multipole moments}
+
+Multipole moments of a correlation function $\xi(r,\nu)$ are,
+\begin{equation}
+  \xi_\ell(r) \equiv \frac{2 \ell + 1}{2} \int_{-1}^1 \xi(r, \nu) d\nu;\quad
+  \xi(r, \nu) = \sum_{\ell=0}^\infty \xi_\ell(r) \mathcal{P}_\ell(\nu).
+\end{equation}
+where $\nu = z/r$.\\
+
+Multipole moments of a power spectrum $P(k, \mu)$ are,
+\begin{equation}
+  P_\ell(k) \equiv \frac{2 \ell + 1}{2} \int_{-1}^1 P(k, \mu) d\mu;\quad
+  P(k, \mu) = \sum_{\ell=0}^\infty P_\ell(k) \mathcal{P}_\ell(\nu),
+\end{equation}
+where $\mu = k_z/k$, and $\mathcal{P}_\ell$ is the \hyperref[sec:legendre]{Legendre polynomial}.\\
+
+\vspace{5mm}
+Multipole moments $\xi_\ell(r, \nu)$ and $P_\ell(k, \nu)$ are related though the spherical-Bessel transform:
+%
+\begin{align}
+  &P_\ell(k) = 4\pi \, (-i)^\ell \!\int_0^\infty j_\ell(kr) \xi_\ell(r) \,dr
+  \label{eq:spherical-bessel-dr}\\
+  &\xi_\ell(r) = \frac{i^\ell}{2\pi^2} \int_0^\infty \,j_\ell(kr) P_\ell(k) \,dk
+  \label{eq:spherical-bessel-dk}
+\end{align}
+%
+where $j_\ell$ is the spherical Bessel function.
+
+\clearpage
+
+\paragraph{Derivation of spherical-Bessel transform} \quad\\
+\label{proof:multipole-transform}
+
 \vspace{5mm}
 
+Apply the spherical-harmonic addition theorem,
+%
 \begin{equation}
   e^{i\bm{k}\cdot\bm{r}} = 4\pi \sum_{\ell=0}^\infty \sum_{m=-\ell}^\ell
   i^\ell j_\ell(kr) Y_\ell^m(\hat{\bm{k}}) Y_\ell^m(\hat{\bm{r}})^*
 \end{equation}
+%
+and,
+%
+\begin{equation}
+  Y_\ell^0(\theta, \varphi) = \sqrt{\frac{2\ell + 1}{4\pi}} P_\ell(\cos\theta)
+\end{equation}
+%
+to the Fourier transform,
+%
+\begin{align}
+  P(k, \mu) = \int \! d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \xi(r, \nu),\\
+  \xi(r, \nu) = \int \! d^3 k \, e^{i\bm{k}\cdot\bm{r}} P(k, \mu).
+\end{align}
+%
+\begin{equation}
+  \int\! Y_\ell^m(\theta, \varphi) d \varphi = 0 \mbox{ for $m \neq 0$}
+\end{equation}
+and the orthognality of the Legendre polynomials give equations~(\ref{eq:spherical-bessel-dr}--\ref{eq:spherical-bessel-dk}).
 
-Legendre polynomials $\mathcal{P}_\ell$
+\clearpage
+\subsection{Legendre polynomials}
+\label{sec:legendre}
+
+\paragraph{Orthognality}
+  
 \begin{equation}
   \int_{-1}^1 \mathcal{P}_\ell(x) \mathcal{P}_n(x) \, dx =
     \frac{2}{2\ell + 1} \delta_{\ell m}
 \end{equation}
 
-Multipole moments of a correlation function $\xi(r,\nu)$,
+
+
+\newpage
+\section{Basic cosmology}
+
+Scale factor,
 \begin{equation}
-  \xi_\ell(r) = \frac{2 \ell + 1}{2} \int_{-1}^1 \xi(r, \nu) d\nu;\quad
-  \xi(r, \nu) = \sum_{\ell=0}^\infty \xi_\ell(r) \mathcal{P}_\ell(\nu).
+  a = \frac{1}{1 + \mathrm{redshift}}.
 \end{equation}
-where $\nu = z/r$.
 
-Multipole moments of a power spectrum $P(k, \mu)$,
+Hubble parameter,
 \begin{equation}
-  P_\ell(k) = \frac{2 \ell + 1}{2} \int_{-1}^1 P(k, \mu) d\mu;\quad
-  P(k, \mu) = \sum_{\ell=0}^\infty P_\ell(k) \mathcal{P}_\ell(\nu),
+  H(a) = H_0 \sqrt{\Omega_m a^{-3} + \Omega_\Lambda}
 \end{equation}
-where $\mu = k_z/k$.
+for a flat-$\Lambda$CDM cosmology with only matter and the
+cosmological constant, $\Omega_m + \Omega_\Lambda = 1$.\\
 
-Multipole moments of the correlation function and power spectrum are realated by the spherical Bessel function $j_\ell$,
-\begin{align}
-  &P_\ell(k) = 4\pi \, (-i)^\ell \!\int_0^\infty j_\ell(kr) \xi_\ell(r) \,dr\\
-  &\xi_\ell(r) = \frac{i^\ell}{2\pi^2} \int_0^\infty \,j_\ell(kr) P_\ell(k) \,dk
-\end{align}
+Hubble constant,
+\begin{equation}
+  H_0 = 100\,\mathrm{km}\mathrm{s}^{-1} / \,[h^{-1} \mathrm{Mpc}].
+\end{equation}
 
 
+Linear growth factor,
+\begin{equation}
+  D(a),
+\end{equation}
+normalised at present, $D(a=1) = 1$.\\
 
+Linear growth rate,
+\begin{equation}
+  f = \frac{d\ln D(a)}{d\ln a}.
+\end{equation}
 
 %
 % Notation
 %
 \newpage
-{\Huge \textbf{\textcolor{Blue}{Symbols}}}
+\section{Symbols}
 
 \begin{center}
   \begin{tabular}{ll}
-    symbols & \\
+    Symbols & \\
     \hline
+    $j_\ell$ & Spherical Bessel function\\
+    $\mathcal{P}_\ell$ & Legendre polynomial\\
+    $Y_\ell^m$ & Spherical harmonics\\
+    \hline
+    %
     $a$ & Scale factor, $a=1$ at present\\
     $H$ & Hubble paramter (time dependent)\\
     $D$ & Linear growth factor\\
@@ -622,6 +776,7 @@ Multipole moments of the correlation function and power spectrum are realated by
     $u(\bm{x})$ & Redshift-space displacement $u(\bm{x}) = v_z(\bm{x})/(aH)$\\
     %
     $\bm{r}$ & Separation vector $\bm{r} = \bm{x} - \bm{y}$\\
+    $\nu$   & $\nu = z/r = r_3/|\bm{r}|$\\
     $\Delta u$ & Pairwise RSD displacement $\Delta u = u(\bm{x}) - u(\bm{y})$\\
     $k$ & Magnitude of the wavevector $k = |\bm{k}|$\\
     $\mu$ & $\mu=k_z/k$\\
@@ -632,21 +787,6 @@ Multipole moments of the correlation function and power spectrum are realated by
 %
 %
 %
-\newpage
-
-{\Huge \textbf{\textcolor{Blue}{Basics}}}
-
-\begin{equation}
-  \theta(\bm{x}) \equiv - \frac{1}{aHf} \bm{\nabla}\cdot\bm{v}(\bm{x})
-\end{equation}
-
-Inverting this relation in Fourier space assuming curl-free velocity
-field gives,
-\begin{equation}
-  \hat{u}(\bm{k}) = \frac{ifk_z}{k^2} \hat{\theta}(\bm{k})
-\end{equation}
-
-
 
 
 \end{document}
