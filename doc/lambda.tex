@@ -195,7 +195,6 @@ $\blacktriangleright$ \hyperlink{sec:decomposed-power-derivation}{Derivation}
 The redshift-space density contrast in Fourier space is,
 %
 \begin{equation}
-  \label{eq:delta-s}
   \delta_D(\bm{k}) + \hat{\delta}^s(\bm{k}) = \int \! d^3 x \, e^{-i\bm{k}\cdot\bm{x}} [1 + \delta(\bm{x})] e^{-ik_z u(\bm{x})},
 \end{equation}
 %
@@ -312,8 +311,10 @@ The shot-noise-subtracted power spectra are,
                    \left\langle D(\bm{k}) U(\bm{k})^* \right\rangle
                    + \bar{n}^{-1}_\mathrm{rand},\\
   P_{UU}(k, \mu) &= V^{-1} \left\langle U(\bm{k}) U(\bm{k})^* \right\rangle
-                  - \bar{n}^{-1}_\mathrm{rand}.
+                  - \bar{n}^{-1}_\mathrm{rand},
 \end{align}
+where $\bar{n}_\mathrm{data}$ and $\bar{n}_\mathrm{rand}$ are the
+number densities of the data and random particles, respectively.
 
 \vspace{5mm}
 \paragraph{Shot noise}
@@ -344,7 +345,7 @@ Therefore, the shot noise in $P_{DU}$ is,
 \end{equation}
 %
 
-Finally, the shot noise in $P_{DD}$ is,
+The shot noise in $P_{DD}$ is,
 \begin{equation}
   V^{-1} \left\langle [\delta^s(\bm{k}) - U(\bm{k})]
   [\delta^s(\bm{k}) - U(\bm{k})]^* \right\rangle
@@ -417,24 +418,38 @@ where $b$ is the linear bias and $m$ stands for matter.\\
   P_{ab}(k, \mu) = \mathring{P}_{ab}(k, \mu) \exp \left[
     \frac{A_{ab}}{\mathring{P}_{ab}}
     - \frac{1}{2} \left( \frac{A_{ab}}{\mathring{P}_{ab}} \right)^2
-    + \frac{B_{ab}}{\mathring{P}_{ab}} - (f k \mu \sigma_{ab})^2
+    + \frac{B_{ab}}{\mathring{P}_{ab}} - k^2 \mu^2 (\sigma_v^2 - \sigma_{ab}^2)
     \right],
 \end{equation}
 %
 where $a$, $b$ takes $D$ or $U$.\\
 
 $\mathring{P}_{ab}(\bm{k})$ are real-space quantities,
+%
 \begin{align}
   &\mathring{P}_{DD}(k) = P_{\delta\delta}(k) = b^2 P_{mm}(k),\\
   &\mathring{P}_{DU}(k, \mu) = P_{\delta u'}(k, \mu) = b f\mu^2 P_{m\theta}(k),\\
   &\mathring{P}_{UU}(k, \mu) = P_{u'u'}(k, \mu) = f^2\mu^4 P_{\theta\theta}(k),
 \end{align}
-$A_{ab}(k, \mu)$ and $B_{ab}(k, \mu)$ are same as the TNS model, and,
+%
+$A_{ab}(k, \mu)$ and $B_{ab}(k, \mu)$ are same as the TNS model,
+$\sigma_v$ is the rms of the displace field,
+%
+\begin{equation}
+  \sigma_v^2 = \left\langle u(\bm{x})^2 \right\rangle
+\end{equation}
+%
+which is,
+%
+\begin{equation}
+  \bar{\sigma}_v^2 = \frac{f^2}{6\pi^2} \int_0^\infty \!\! \bar{P}(k) dk
+\end{equation}
+in the linear theory, and,
 %
 \begin{equation}
   \sigma_{ab}^2(k, \mu) = \frac{1}{\mathring{P}_{ab}(k, \mu)}
-  \int \! d^3 r e^{-i\bm{k}\cdot\bm{r}} 
-  \mathring{\xi}_{ab}(\bm{r}) \left[ \sigma^2_v - \xi_{uu}(\bm{r}) \right],
+  \int \!\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}} 
+  \mathring{\xi}_{ab}(\bm{r}) \xi_{uu}(\bm{r}),
 \end{equation}
 %
 where $\xi$'s are correlation functions,
@@ -459,27 +474,27 @@ where $\xi$'s are correlation functions,
 
 Define generating functions, and apply cumulant expansion,
 \begin{align}
-  \mathcal{M}^{ab}(\bm{k}, J) &\equiv
+  \mathcal{M}_{ab}(\bm{k}, J) &\equiv
   \int \!\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
   \phi_a(\bm{x}) \phi_b(\bm{y}) e^{-iJ\Delta u} \right\rangle\\
   %
   &= \exp\left[
-    \mathcal{C}_0^{ab}(\bm{k}) +
-    \mathcal{C}_1^{ab}(\bm{k}) J +
-    \frac{1}{2} \mathcal{C}_2^{ab}(\bm{k}) J^2 + \cdots
+    \mathcal{C}_{ab}^{[0]}(\bm{k}) +
+    \mathcal{C}{ab}^{[1]}(\bm{k}) J +
+    \frac{1}{2} \mathcal{C}_{ab}^{[2]}(\bm{k}) J^2 + \cdots
     \right],
 \end{align}
 where $a$,$b$ takes $D$ or $U$, $\Delta u \equiv u(\bm{x}) - u(\bm{y})$, and,
 \begin{align}
-  \phi_D(\bm{x}) &= \delta(\bm{x}),\\
-  \phi_U(\bm{x}) &= u'(\bm{x}).
+  \phi_D(\bm{x}) &\equiv \delta(\bm{x}),\\
+  \phi_U(\bm{x}) &\equiv u'(\bm{x}).
 \end{align}
-$J$ is a free real number, which reproduces the decomposed power when it is equal to $k_z$,
+The parameter $J$ is a free real number, which reproduces the decomposed power when it is equal to $k_z$,
 \begin{equation}
   P_{ab}(\bm{k}) = \mathcal{M}_{ab}(\bm{k}, k_z).
 \end{equation}
 %
-The cumulant expansion is a Taylor expansion of $\ln \mathcal{M}_{ab}$ in the powers of $J$,
+The cumulant expansion is a Taylor expansion of $\ln \mathcal{M}_{ab}$ in powers of $J$,
 %
 \begin{equation}
   \mathcal{C}_{ab}^{[n]} = \frac{d^n}{dJ^n}
@@ -488,20 +503,13 @@ The cumulant expansion is a Taylor expansion of $\ln \mathcal{M}_{ab}$ in the po
 
 \begin{equation}
   C_{ab}^{[0]}(\bm{k}) =
-  \ln M_{ab}(\bm{k}, 0) \equiv \ln \mathring{P}_{ab}(\bm{k})
+  \ln \mathcal{M}_{ab}(\bm{k}, 0) \equiv \ln \mathring{P}_{ab}(\bm{k})
 \end{equation}
 
 \begin{align}
   C_{ab}^{[1]}(\bm{k}) &= \frac{1}{\mathring{P}_{ab}(\bm{k})}
   \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
-  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u) \right\rangle\\
-\end{align}
-
-\begin{align}
-  A_{ab}(\bm{k}) \equiv
-  \frac{1}{\mathring{P}_{ab}(\bm{k})}
-  \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
-  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i k_z \Delta u) \right\rangle\\
+  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u) \right\rangle
 \end{align}
 
 \begin{align}
@@ -511,19 +519,27 @@ The cumulant expansion is a Taylor expansion of $\ln \mathcal{M}_{ab}$ in the po
   \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u)^2 \right\rangle
 \end{align}
 
+The TNS $A$ term is defined as,
+\begin{align}
+  A_{ab}(\bm{k}) \equiv
+  \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
+  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i k_z \Delta u) \right\rangle
+\end{align}
+
+
 We compute the leading order of this second cumulant using linear
-perturbation theory,
+theory,
 \begin{equation}
   \left\langle
   \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u)^2 \right\rangle
   \approx
-  2 \left\langle \phi_a^\mathrm{lin}(\bm{x})
-                  (-i\Delta u^\mathrm{lin}) \right\rangle
-    \left\langle \phi_b^\mathrm{lin}(\bm{y})
-                  (-i\Delta u^\mathrm{lin}) \right\rangle
-  - \left\langle \phi_a^\mathrm{lin}(\bm{x})
-                 \phi_a^\mathrm{lin}(\bm{y}) \right\rangle
-  \left\langle (\Delta u^\mathrm{lin})^2 \right\rangle,
+  2 \left\langle \bar{\phi}_a(\bm{x})
+                  (-i\Delta \bar{u}) \right\rangle
+    \left\langle \bar{\phi}_b(\bm{y})
+                  (-i\Delta \bar{u}) \right\rangle
+  - \left\langle \bar{\phi}_a(\bm{x})
+                 \bar{\phi}_a(\bm{y}) \right\rangle
+  \left\langle (\Delta \bar{u})^2 \right\rangle,
 \end{equation}
 using a property of Gaussian random variables.
 
@@ -531,10 +547,10 @@ using a property of Gaussian random variables.
 \begin{equation}
   B_{ab}(\bm{k}) \equiv
   \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
-  \left\langle \phi_a^\mathrm{lin}(\bm{x})
-                  (-i\Delta u^\mathrm{lin}) \right\rangle
-  \left\langle \phi_b^\mathrm{lin}(\bm{y})
-                  (-i\Delta u^\mathrm{lin}) \right\rangle
+  \left\langle \bar{\phi}_a(\bm{x})
+                  (-ik_z \Delta \bar{u}) \right\rangle
+  \left\langle \bar{\phi}_b(\bm{y})
+                  (-ik_z \Delta \bar{u}) \right\rangle
 \end{equation}
 
 %
@@ -577,29 +593,32 @@ using a property of Gaussian random variables.
 %
 \paragraph{DU}
 %
-\begin{align}
-  \sigma^2_{DU}(k, \mu) &= \sigma_v^2 - \frac{1}{f\mu^2 \bar{P}(k)}
+\begin{equation}
+  \sigma^2_{DU}(k, \mu) = \frac{1}{f\mu^2 \bar{P}(k)}
   \left[
     \sigma^2_{DU(0)}(k) + \sigma^2_{DU(2)}(k) \mathcal{P}_2(\mu)
     + \sigma^2_{DU(4)}(k) \mathcal{P}_4(\mu)
-    \right]\\
-\end{align}
+    \right]
+\end{equation}
 
 
 \begin{align}
-  \sigma^2_{DU(0)}(k) &= \frac{1}{6\pi^2 f\mu^2\bar{P}(k)} \int\! r^2 dr \left[
-    \xi_0(r) \xi_{uu(0)}(r) + \frac{2}{5} \xi_2(r) \xi_{uu(2)}(r)
-    \right] j_0(kr)\\
+  \sigma^2_{DU(0)}(k) &= \frac{4\pi}{3 \mu^2\bar{P}(k)}
+    \int\! r^2 dr  j_0(kr) \left[
+      \xi_0(r) \xi_{uu(0)}(r) + \frac{2}{5} \xi_2(r) \xi_{uu(2)}(r)
+    \right]\\
   %
-  \sigma^2_{DU(2)}(k) &= -\frac{1}{6\pi^2 f\mu^2 \bar{P}(k)} \int\! r^2 dr \left[
+  \sigma^2_{DU(2)}(k) &= -\frac{4\pi}{3 \mu^2 \bar{P}(k)}
+  \int\! r^2 dr j_2(kr) \left[
     \xi_0(r) \xi_{uu(2)}(r) + 2 \xi_2(r) \xi_{uu(0)}(r) + \frac{4}{7} \xi_2(r) \xi_{uu(2)}(r)
-    \right] j_2(kr)\\
+    \right] \\
   %
-  \sigma^4_{DU(4)}(k) &= \frac{12}{35\pi^2 f\mu^2 \bar{P}(k)} \int\! r^2 dr \,
+  \sigma^4_{DU(4)}(k) &= \frac{48\pi}{35 \mu^2 \bar{P}(k)} \int\! r^2 dr \,
   \xi_2(r) \xi_{uu(2)}(r) j_4(kr)    
 \end{align}
 
-Finiteness as $\mu \rightarrow 0$?
+The combination in the exponential $k^2\mu^2 \sigma_{DU}^2(k, \mu)$ is
+finite as $\mu \rightarrow 0$.
 
 \begin{equation}
   \bar{\xi}_{\delta u'}(r, \nu)/f
@@ -612,7 +631,66 @@ Finiteness as $\mu \rightarrow 0$?
     + \frac{18}{35} \mathcal{P}_4(x)
 \end{equation}
 
+%
+% UU
+%
 \clearpage
+\paragraph{DU}
+
+\begin{equation}
+  \sigma_{UU}^2(k, \mu) = \sigma_v^2 - \sigma_{UU}(k) - ...
+\end{equation}
+
+\begin{equation}
+  C_{UU}(\bm{k}) = \int \!\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \xi_{u'u'}(\bm{r})
+  \xi_{uu}(\bm{r})
+\end{equation}
+
+\begin{equation}
+  \sigma_{UU}(k, \mu) = \sigma_v^2 - \sum_{\ell} \sigma_{UU(\ell)}(k) \mathcal{P}_\ell(\mu)
+\end{equation}
+
+\begin{align}
+  &\sigma_{UU(0)}(k) = \frac{4\pi}{5 \mu^4 \bar{P}(k)}
+    \int \! r^2 dr j_0(kr) \left[
+    \xi_0(r) \xi_{uu(0)}(r) + \frac{4}{7} \xi_2(r) \xi_{uu(2)}(r) \right]\\
+  &\sigma_{UU(2)}(k) = -\frac{4\pi}{\mu^4 \bar{P}(k)}
+    \int \! r^2 dr j_2(kr) \left[
+    \frac{1}{5} \xi_0 \xi_{uu(2)}
+    +\frac{4}{7} \xi_2 \xi_{uu(0)}
+    +\frac{8}{49} \xi_2 \xi_{uu(2)}
+    + \frac{16}{245} \xi_4 \xi_{uu(2)}\right]\\
+  &\sigma_{UU(4)}(k) = 4\pi \frac{4}{35 \mu^4 \bar{P}(k)} \int\! r^2 dr j_4(kr)\left[
+    2\xi_4(r)\xi_{uu(0)} + \frac{80}{77} \xi_4 \xi_{uu(2)}
+    + \frac{18}{7} \xi_2(r) \xi_{uu(2)}(r)\right]\\
+  &\sigma_{UU(6)}(k) = -4\pi \frac{40}{385\mu^4 \bar{P}(k)}
+    \int\! r^2 dr j_6(kr) \xi_4(r) \xi_{uu(2)}(r)
+\end{align}
+
+\begin{equation}
+  \xi_{u'u'}(r, \nu)/f^2 = \frac{1}{5} \xi_0(r)
+  + \frac{4}{7} \xi_2(r) \mathcal{P}_2(\nu)
+  + \frac{8}{35} \xi_4(r) \mathcal{P}_4(\nu)
+\end{equation}
+
+\begin{equation}
+  \mu^4 = \frac{1}{5} + \frac{4}{7} \mathcal{P}_2(\mu)
+          + \frac{8}{35} \mathcal{P}_4(\mu)
+\end{equation}
+
+\begin{equation}
+  \mathcal{P}_2(x) \mathcal{P}_2(x)
+  = \frac{1}{5} \mathcal{P}_0(x) + \frac{2}{7} \mathcal{P}_2(x)
+    + \frac{18}{35} \mathcal{P}_4(x)
+\end{equation}
+
+\begin{equation}
+  \mathcal{P}_2(x) \mathcal{P}_4(x)
+  = \frac{2}{7} \mathcal{P}_2(x)
+  + \frac{20}{77} \mathcal{P}_4(x)
+  + \frac{5}{11} \mathcal{P}_6(x)
+\end{equation}
+
 
 %
 % Numerical integration (xi)
@@ -653,6 +731,46 @@ we obtain,
 \end{align}
 where the integration variable is converted to $r \equiv q/k$.
 
+\clearpage
+\paragraph{DU}
+
+\begin{align}
+  C_{DU}(k, \mu) &= \int \! d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
+                    \bar{\xi}_{\delta u'}(\bm{r}) \bar{\xi}_{uu}(\bm{r})\\
+                 &= f^3 \int \!\frac{d^3 q}{(2\pi)^3}
+                    \frac{(k_z - q_z)^2}{|\bm{k} - \bm{q}|^2} \mu_q^2
+              \bar{P}\left(|\bm{k} - \bm{q}|\right) \bar{P}(q)/q^2\\
+  &= C_{DU(0)} - 2 C_{DU(1)} + C_{DU(2)},
+\end{align}
+where,
+\begin{align}
+  C_{DU(n)}(k, \mu)
+    &\equiv \frac{f^3 k_z^{2 - n}}{(2\pi)^3}
+              \int_0^\infty\! q^n dq \, \bar{P}(q) \int \!d\Omega_q \,
+              (q_z/q)^{n + 2}
+              \frac{\bar{P}\left( | \bm{k} - \bm{q} |\right)}{|\bm{k} - \bm{q}|^2},\\
+    &= \sum_\ell c_{(n+2)\ell} C_{DU(n\ell)}(k) \mathcal{P}_\ell(\mu),
+\end{align}
+and,
+\begin{align}
+  &C_{DU(n\ell)} \equiv
+    \frac{f^3 k \mu^{2 - n}}{4\pi^2} \int_0^\infty \! r^n dr \, \bar{P}(kr)
+    \int_{-1}^1 \!dx \,
+    \mathcal{P}_\ell(x)
+    \frac{\bar{P}\left(k \sqrt{1 + r^2 - 2rx}\right)}{1 + r^2 -2rx},\\
+    &c_{n\ell} \equiv \frac{2\ell + 1}{2}
+                     \int_{-1}^1 x^n \mathcal{P}_\ell(x) dx.
+\end{align}
+
+\begin{equation}\begin{split}
+  &c_{20} = 1/3,\\
+  &c_{20} = 2/3,\\
+  &c_{31} = 3/5,\\
+  &c_{31} = 2/5,\\
+  &c_{40} = 1/5,\\
+  &c_{43} = 4/7,\\
+  &c_{44} = 8/35.
+\end{split}\end{equation}
 
 \clearpage
 \subsubsection{Understanding $\sigma_{ab}$}
@@ -862,8 +980,64 @@ and the orthogonality of the Legendre polynomials
 equations~(\ref{eq:spherical-bessel-dr}--\ref{eq:spherical-bessel-dk}).
 
 \clearpage
+\subsection{Numerical integral of spherical-Bessel transform}
+
+We consider a numerical integral spherical-Bessel transform,
+%
+\begin{equation}
+  \int_0^\infty x^n j_\ell(kr) F(x)
+\end{equation}
+%
+Integrating an oscilating function numerically using descritization
+much longer than the period of the oscilation is anaccurate. Using a
+stepping always smaller than the period is computationally
+expensive.
+
+We use a piece-wise-linear interpolation,
+%
+\begin{equation}
+  F(x) = a_0 + a_1 x
+\end{equation}
+%
+and a piece-wise analytical integral,
+%
+\begin{align}
+  &\int x^n \sin x dx = \texttt{sin\_integ}(n, x),\\
+  &\int x^n \cos x dx = \texttt{cos\_integ}(n, x),
+\end{align}
+%
+specifically,
+%
+\begin{align}
+  &\int \sin x dx = -\cos x,\\
+  &\int \cos x dx = \sin x,\\
+  &\int x \sin x dx = \sin x - x \cos x,\\
+  &\int x \cos x dx = \cos x + x \sin x,\\
+  &\int x^2 \sin x dx = x^2 \sin x + 2 x \cos x - 2 \sin x,\\
+  &\int x^2 \cos x dx = -x^2 \cos x + 2 x \sin x + 2 \cos x.
+\end{align}
+%
+
+\vspace{5mm}
+
+\begin{equation}\begin{split}
+    &\int_{x1}^{x2} x^2 (a_0 + a_1 x) j_0(x) dx \\
+    &=
+    a_0 [\texttt{sin\_integ}(1, x_2) - \texttt{sin\_integ}(1, x_1)]
+    + a_2 [\texttt{sin\_integ}(2, x_2) - \texttt{sin\_integ}(2, x_2)]
+\end{split}\end{equation}
+
+\clearpage
 \subsection{Legendre polynomials}
 \label{sec:legendre}
+
+\begin{align}
+  &\mathcal{P}_0(x) = 1\\
+  &\mathcal{P}_1(x) = x\\
+  &\mathcal{P}_2(x) = \frac{1}{2} (3x^2 - 1)\\
+  &\mathcal{P}_3(x) = ...\\
+  &\mathcal{P}_4(x) = ...
+\end{align}
 
 \vspace{4mm}
 

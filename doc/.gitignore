@@ -1,7 +1,8 @@
 *~
 *.aux
+*.bak
 *.out
 *.log
 *.toc
 lambda.pdf
-
+copy.sh

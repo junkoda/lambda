@@ -97,11 +97,17 @@ def load_theta_power(sim, isnp, data_dir, nc=None):
     n = len(filenames)
     P = None
 
+    params = lambdalib.info(sim, isnp)
+    aH = params['a']*params['H']
+
     for i, filename in enumerate(filenames):
         a = np.loadtxt(filename)
         
         if P is None:
             P = np.zeros((a.shape[0], a.shape[1], n))
+
+        a[:, 3] /= aH
+        a[:, 4] /= aH**2
 
         P[:, :, i] = a
 

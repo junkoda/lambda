@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
 
-def fit_DD(d, ik, imu, f, fit=None):
+def fit_DD(d, ik, imu, f, fit=None, p0=None):
     """
     Fit P_DD(k, mu, lambda) with an given function 
     f(lambda, y0, ...) = PDD_0 + f(lambda)
@@ -26,7 +26,10 @@ def fit_DD(d, ik, imu, f, fit=None):
     y = y[idx]
 
     # fitting
-    popt, pcov = curve_fit(f, x, y)
+    try:
+        popt, pcov = curve_fit(f, x, y)
+    except:
+        return None
 
     if fit is None:
         fit = {}
@@ -37,7 +40,7 @@ def fit_DD(d, ik, imu, f, fit=None):
     return fit
 
 
-def fit_DU(d, ik, imu, f, fit=None):
+def fit_DU(d, ik, imu, f, fit=None, p0=None):
     """
     Fit P_DU(k, mu, lambda) with an given function 
     f(lambda, ...) = A*lambda*f(lambda, ...)
@@ -62,11 +65,18 @@ def fit_DU(d, ik, imu, f, fit=None):
     y = y[idx]
 
     # initial guess
-    p0 = [0,]*(f.__code__.co_argcount)
+    if p0 is None:
+        p0 = [0,]*(f.__code__.co_argcount)
+    else:
+        p0 = [0,].append(p0)
+        
     p0[0] = y[10]/x[10]
 
     # fitting
-    popt, pcov = curve_fit(ff, x, y, p0=p0)
+    try:
+        popt, pcov = curve_fit(ff, x, y, p0=p0)
+    except:
+        return None
 
     if fit is None:
         fit = {}
@@ -78,7 +88,7 @@ def fit_DU(d, ik, imu, f, fit=None):
     return fit
 
 
-def fit_UU(d, ik, imu, f, fit=None):
+def fit_UU(d, ik, imu, f, fit=None, p0=None):
     """
     Fit P_UU(k, mu, lambda) with an given function 
     f(lambda, ...) = A*lambda**2*f(lambda, ...)
@@ -106,7 +116,11 @@ def fit_UU(d, ik, imu, f, fit=None):
     p0[0] = y[10]/x[10]**2
 
     # fitting
-    popt, pcov = curve_fit(ff, x, y, p0=p0)
+    try:
+        popt, pcov = curve_fit(ff, x, y, p0=p0)
+    except:
+        return None
+    
 
     if fit is None:
         fit = {}
@@ -118,7 +132,9 @@ def fit_UU(d, ik, imu, f, fit=None):
 
     return fit
 
-def fit_lambda(d, ik, imu, f, *, kind=('DD', 'DU', 'UU')):
+def fit_lambda(d, ik, imu, f, *,
+               kind=('DD', 'DU', 'UU'),
+               p0=None):
     """
     Fit lambda plot with a fitting function f:
 
@@ -132,6 +148,8 @@ def fit_lambda(d, ik, imu, f, *, kind=('DD', 'DU', 'UU')):
       imu (int):   index of mu
       f (func):    fitting function f(lambda, fitting parameters ...)
       kind (list): fitting P_**, subset of ('DD', 'DU', 'UU')
+      p0:          initial parameter guess
+      
 
     Result:
       fit (dict)
@@ -145,9 +163,14 @@ def fit_lambda(d, ik, imu, f, *, kind=('DD', 'DU', 'UU')):
 
         fit['PDU_amp']:    amplitude A in PDU = A*lambda*f(lambda)
         fit['PUU_amp']:    amplitude A in PDU = A*lambda**2*f(lambda)
+
+      None if fitting failed
     """
 
     fit = {}
+
+    if np.isnan(d['PDD'][ik, imu, 0]):
+        return None
 
     if 'DD' in kind:
         fit_DD(d, ik, imu, f, fit)
