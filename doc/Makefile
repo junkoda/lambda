@@ -5,7 +5,10 @@ all: lambda.pdf
 	@grep -e 'may have changed' $(basename $<).log && rm $@; $(MAKE) $@ || echo "done."
 	test -f copy.sh && sh copy.sh
 
-.PHONY: clean
+.PHONY: clean check
 
 clean:
 	rm *.pdf *.aux *.log *.out
+
+check:
+	aspell --lang=en_GB -t check lambda.tex

@@ -40,15 +40,8 @@
 %
 \definecolor{Green}{rgb}{0.0, 0.5, 0.0}
 \definecolor{Blue}{rgb}{0.16, 0.32, 0.75}
-%\definecolor{Red}{rgb}{0.84, 0.04, 0.33}
 \definecolor{Red}{rgb}{0.82, 0.1, 0.26}
 
-
-%\renewcommand\section{\@startsection {section}{1}{\z@}%
-%  {-3.5ex \@plus -1ex \@minus -.2ex}%
-%  {2.3ex \@plus.2ex}%
-%  {\normalfont\Large\bfseries}%
-%}
 
 %
 % Appearance difinitions
@@ -202,7 +195,7 @@ $\blacktriangleright$ \hyperlink{sec:decomposed-power-derivation}{Derivation}
 The redshift-space density contrast in Fourier space is,
 %
 \begin{equation}
-  \label{eq:deltas}
+  \label{eq:delta-s}
   \delta_D(\bm{k}) + \hat{\delta}^s(\bm{k}) = \int \! d^3 x \, e^{-i\bm{k}\cdot\bm{x}} [1 + \delta(\bm{x})] e^{-ik_z u(\bm{x})},
 \end{equation}
 %
@@ -232,24 +225,26 @@ configuration-space density contrast $\delta^s(\bm{s})$,
 \end{equation}
 
 \vspace{10mm}
-We rewrite equation~(\ref{eq:deltas}) as,
+We rewrite equation~(\ref{eq:delta-s}) as,
 %
 \begin{align}
   \hat{\delta}(\bm{k}) &= D(\bm{k}) + U(\bm{k}),\\
   D(\bm{k}) &= \int \! d^3 x \, e^{-i\bm{k}\cdot\bm{x}} \delta(\bm{x})
-               e^{-ik_z u(\bm{x})},\\
+                                e^{-ik_z u(\bm{x})},\\
+  \label{eq:U}
   U(\bm{k}) &= \int \! d^3 x \, e^{-i\bm{k}\cdot\bm{x}}
-                              e^{-ik_z u(\bm{x})}.\\
+                              \left[ e^{-ik_z u(\bm{x})} - 1 \right].\\
 \end{align}
 %
 The last equation is equal to,
 %
 \begin{equation}\begin{split}
+  \label{eq:Uprime}
   U(\bm{k}) = \int\! d^3 x \, e^{-i \bm{k}\cdot\bm{x}}
               \left( - \frac{\partial u(\bm{x})}{\partial z} \right)
               e^{-ik_z u(\bm{x})},
 \end{split}\end{equation}
-applying integration by parts for,
+applying integration by parts to,
 \begin{equation}
   e^{-i \bm{k}\cdot\bm{x}} = \frac{1}{-ik_z}
   \frac{\partial}{\partial z} e^{-i \bm{k}\cdot\bm{x}}.
@@ -269,7 +264,7 @@ Power spectra are defined as usual,
 \end{align}
 
 \vspace{10mm}
-The reality of the cross-power spectrum,
+The reality of the covariance,
 %
 \begin{equation}
   \left\langle D(\bm{k}) U(\bm{k}')^* \right\rangle =
@@ -278,6 +273,60 @@ The reality of the cross-power spectrum,
 \end{equation}
 
 follows from the statistical parity invariance. 
+
+\textsc{Proposition}
+%
+\begin{align}
+  \left\langle U(\bm{k}) \right\rangle = 0,\\
+  \left\langle D(\bm{k}) \right\rangle = 0
+\end{align}
+
+
+\newpage
+\subsection{Power spectrum decomposition in simulation}
+
+Note that $U(\bm{k})$ field (equation~\ref{eq:U}) is the density field
+in Fourier space (equation~\ref{eq:delta-s}) with $\delta(\bm{x}) =
+0$. This means that we can obtain $U(\bm{k})$ by applying the
+redshift-distortion to a homogeneous field.\\
+
+We distribute random particles homogeneously in a simulation box, and
+displace the particles according to the displacement field
+$\bm{u}(\bm{x})$. Since the displacement field is defined at data
+particle (halo) positions, we use the velocity of the nearest data
+particle; this is a piece-wise-constant interpolation in Voronoi
+cells; another common interpolation is to use a piece-wise-linear
+interpolation using the Delaunay tessellation. The Fourier transform
+of this redshift-space `random' field is $U(\bm{k})$, and the residual
+is the $D(\bm{k})$ field,
+%
+\begin{equation}
+  D(\bm{k}) = \delta^s(\bm{k}) - U(\bm{k}).
+\end{equation}
+
+We estimate the $P_{UU}$ power spectrum in 2-dimensional bins of $(k, \mu)$
+%
+\begin{equation}
+  P_{UU}(k, \mu) = V^{-1} \left\langle U(\bm{k}) U(\bm{k})^* \right\rangle
+                  - \bar{n}^{-1}_\mathrm{rand}
+\end{equation}
+%
+where $V$ is the volume of the simulation box, and
+$\bar{n}_\mathrm{rand}$ is the number density of the homogeneous
+random field.
+
+The cross power do not have shot noise in average,
+\begin{equation}
+  P_{DU}(k, \mu) = V^{-1} \mathrm{Re}
+                  \left\langle D(\bm{k}) U(\bm{k})^* \right\rangle.
+\end{equation}
+
+
+
+%\begin{equation}
+%  \left\langel \delta^2(\bm{k}) \right\rangle = 0.
+%\end{equation}
+
 
 
 %
@@ -298,7 +347,7 @@ Taruya model in the decomposed form is,\vspace{-2mm}
     f\mu^2 P_{m\theta}(k) + A_{DU}(k, \mu) + B_{DU}(k, \mu)
     \right] e^{- (k\mu\sigma_v)^2},\\
   %
-  P_{DU}(k, \mu) &= \left[
+  P_{UU}(k, \mu) &= \left[
     f^2 \mu^4 P_{\theta\theta}(k) + A_{UU}(k, \mu) + B_{UU}(k, \mu)
     \right] e^{- (k\mu\sigma_v)^2},   
 \end{align}
@@ -396,7 +445,7 @@ $J$ is a free real number, which reproduces the decomposed power when it is equa
   P_{ab}(\bm{k}) = \mathcal{M}_{ab}(\bm{k}, k_z).
 \end{equation}
 %
-The cumulant expansion is a Tylor expansion of $\ln \mathcal{M}_{ab}$ in the powers of $J$,
+The cumulant expansion is a Taylor expansion of $\ln \mathcal{M}_{ab}$ in the powers of $J$,
 %
 \begin{equation}
   \mathcal{C}_{ab}^{[n]} = \frac{d^n}{dJ^n}
@@ -429,7 +478,7 @@ The cumulant expansion is a Tylor expansion of $\ln \mathcal{M}_{ab}$ in the pow
 \end{align}
 
 We compute the leading order of this second cumulant using linear
-pertubation theory,
+perturbation theory,
 \begin{equation}
   \left\langle
   \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u)^2 \right\rangle
@@ -461,7 +510,8 @@ using a property of Gaussian random variables.
 \subsection{Numerical integration of the streaming model}
 
 \begin{equation}
-  \xi_\ell(r) \equiv 4\pi (-i)^\ell \int\! k^2 dk \, j_\ell(kr) \bar{P}(k)
+  \xi_\ell(r) \equiv \frac{i^\ell}{2\pi^2}
+  \int_0^\infty \! k^2 dk \, j_\ell(kr) \bar{P}(k)
 \end{equation}
 
 \subsubsection{Integrating the correlation function}
@@ -472,11 +522,12 @@ using a property of Gaussian random variables.
 \paragraph{DD}
 
 \begin{align}
-  \sigma^2_{DD}(k, \mu) &= \sigma^2_{DD(0)}(k)
-  + \sigma^2_{DD(2)}(k) \mathcal{P}_2(\mu)\\
+  \sigma^2_{DD}(k, \mu) &=
+  \sigma_v^2 - \sigma^2_{DD(0)}(k)
+             - \sigma^2_{DD(2)}(k) \mathcal{P}_2(\mu)\\
 %
-  \sigma^2_{DD(0)}(k) &= \sigma_v^2
-  - \frac{4\pi}{\bar{P}_{\delta\delta}(k)} \int_0^\infty \! r^2 dr
+  \sigma^2_{DD(0)}(k) &= 
+  \frac{4\pi}{\bar{P}_{\delta\delta}(k)} \int_0^\infty \! r^2 dr
   j_0(kr)\,
   \bar{\xi}_{\delta\delta}(r)
   \bar{\xi}_{uu(0)}(r)\\
@@ -486,13 +537,6 @@ using a property of Gaussian random variables.
   j_2(kr) \,\bar{\xi}_{\delta\delta}(r) \bar{\xi}_{uu(2)}(r)
 \end{align}
 
-\begin{align}
-  \bar{\xi}_{uu}(r, \nu) &= \bar{\xi}_{uu(0)}(r) + \bar{\xi}_{uu(2)}(r) \mathcal{P}_2(\nu)\\
-  \bar{\xi}_{uu(0)}(r) &= \frac{4\pi}{3} \int_0^\infty \!
-                       j_0(kr) \bar{P}(k) dk\\
-  \bar{\xi}_{uu(2)(r)} &= -\frac{8\pi}{3} \int_0^\infty \!
-                       j_2(kr) \bar{P}(k) dk
-\end{align}
 
 %
 % DU
@@ -517,16 +561,21 @@ using a property of Gaussian random variables.
     \xi_0(r) \xi_{uu(2)}(r) + 2 \xi_2(r) \xi_{uu(0)}(r) + \frac{4}{7} \xi_2(r) \xi_{uu(2)}(r)
     \right] j_2(kr)\\
   %
-  \sigma^4_{DU(4)}(k) &= \frac{6}{35\pi^2 f\mu^2 \bar{P}(k)} \int\! r^2 dr \,
+  \sigma^4_{DU(4)}(k) &= \frac{12}{35\pi^2 f\mu^2 \bar{P}(k)} \int\! r^2 dr \,
   \xi_2(r) \xi_{uu(2)}(r) j_4(kr)    
 \end{align}
 
 Finiteness as $\mu \rightarrow 0$?
 
 \begin{equation}
+  \bar{\xi}_{\delta u'}(r, \nu)/f
+  = \frac{1}{3} \bar{\xi}_0(r) + \frac{2}{3} \bar{\xi}_2(r) \mathcal{P}_2(\nu)
+\end{equation}
+
+\begin{equation}
   \mathcal{P}_2(x) \mathcal{P}_2(x)
   = \frac{1}{5} \mathcal{P}_0(x) + \frac{2}{7} \mathcal{P}_2(x)
-    \frac{18}{35} \mathcal{P}_4(x)
+    + \frac{18}{35} \mathcal{P}_4(x)
 \end{equation}
 
 \clearpage
@@ -545,6 +594,31 @@ Finiteness as $\mu \rightarrow 0$?
     \bar{\xi}_{DD}(\bm{r}) \bar{\xi}_{UU}d^3 r\\
   &= f^2 \int \! \dbar^3 q \, \bar{P}(|\bm{k} - \bm{q}|) \mu_q^2 P(q)/q^2
 \end{align}
+
+The function $P(|\bm{k} - \bm{q}|)P(q)$ is a function of k, q, and $x
+= \bm{\hat{k}}\cdot\bm{q}$, for
+\begin{equation}
+  |\bm{k} - \bm{q}| = \sqrt{k^2 + q^2 - 2kqx}.
+\end{equation}
+Using Lemma~\ref{lemma-integral} with,
+\begin{equation}
+  (q_z/q)^2 = \frac{1}{3} + \frac{2}{3} \mathcal{P}_2(q_z/q),
+\end{equation}
+we obtain,
+\begin{align}
+  C_{DD}(k, \mu) &= C_{DD(0)}(k) +
+                   C_{DD(2)}(k) \mathcal{P}_2(\mu)\\
+  C_{DD(0)} &= \frac{f^2 k}{12\pi^2}
+                \int_0^\infty \! dr \, \bar{P}(kr)
+                \int_{-1}^1 \! dx \, 
+                \bar{P}\left(k\sqrt{1 + r^2 - 2rx}\right)\\
+  C_{DD(2)} &= \frac{f^2 k}{6\pi^2}
+                \int_0^\infty \! dr \, \bar{P}(kr)
+                \int_{-1}^1 \! dx \, \mathcal{P}_2(x)
+                \bar{P}\left(k\sqrt{1 + r^2 - 2rx}\right)
+\end{align}
+where the integration variable is converted to $r \equiv q/k$.
+
 
 \clearpage
 \subsubsection{Understanding $\sigma_{ab}$}
@@ -596,7 +670,7 @@ the Fourier transform of $\texttt{a}(\bm{x})$,
   \int\! d^3 x \, e^{-i\bm{k}\cdot\bm{x}} \texttt{a}(\bm{x})
 \end{equation}
 
-The $u$ field can be solved algebraicly in Fourier space:
+The $u$ field can be solved algebraically in Fourier space:
 %
 \begin{align}
   &\hat{u}(\bm{k}) = -\frac{ifk_z}{k^2} \hat{\theta}(\bm{x}),\\
@@ -749,7 +823,7 @@ Then,
   Y_\ell^0(\theta, \varphi) = \sqrt{\frac{2\ell + 1}{4\pi}} P_\ell(\cos\theta),
 \end{equation}
 %
-and the orthognality of the Legendre polynomials
+and the orthogonality of the Legendre polynomials
 (equation~\ref{eq:legendre-orthognal}) give
 equations~(\ref{eq:spherical-bessel-dr}--\ref{eq:spherical-bessel-dk}).
 
@@ -759,7 +833,7 @@ equations~(\ref{eq:spherical-bessel-dr}--\ref{eq:spherical-bessel-dk}).
 
 \vspace{4mm}
 
-\paragraph{Orthognality}
+\paragraph{Orthogonality}
   
 \begin{equation}
   \label{eq:legendre-orthognal}
@@ -774,17 +848,19 @@ equations~(\ref{eq:spherical-bessel-dr}--\ref{eq:spherical-bessel-dk}).
 \vspace{5mm}
 
 \begin{lemma}
+  \label{lemma-integral}
   \begin{equation}
     \label{eq:lemma-integral}
     \int \! d\Omega_q \mathcal{P}_\ell(q_z/q) F(k, q, x)
     = \mathcal{P}_\ell(\mu)
       \times 2\pi \int_{-1}^1 \! dx \, F(k, q, x) \mathcal{P}_\ell(x)
   \end{equation}
-  where $d\Omega_q$ is the angular integral in the spherical coodinate
+  where $d\Omega_q$ is the angular integral in the spherical coordinate
   of $\bm{q}$,
   \begin{align}
     &d^3 q = q^2 dq d\Omega_q,\\
-    &x \equiv \hat{k}\cdot\hat{\bm{q}},
+    &x \equiv \hat{k}\cdot\hat{\bm{q}},\\
+    &\mu = k_z/k
   \end{align}
   and $F$ is an arbitrary
   function of $k$, $q$, and $x$.
@@ -795,14 +871,14 @@ Let us choose a spherical coordinate system of $\bm{q}$, $(q, \theta,
 \varphi)$ such that the $\theta = 0$ direction is $\hat{\bm{k}}$,
 which gives $x = \hat{\bm{k}}\cdot\bm{\bm{q}} = \cos\theta$. We can expand
 the function $F(k, q, x)$ with the Legendre polynomials because it
-only depens on $\theta$, not on $\varphi$,
+only depends on $\theta$, not on $\varphi$,
 \begin{align}
   &F(k, q, x) = \sum_n F_{n}(k, q) \mathcal{P}_n(\cos\theta),\\
   &F_{n}(k, q) = \frac{2n + 1}{2} \int_{-1}^1 \! dx \,\mathcal{P}_n(x) F(k, q, x)
 \end{align}
-The lemma immediatly follows from substuting these equaions to the
+The lemma immediately follows from substituting these equations to the
 left-hand side of equation~(\ref{eq:lemma-integral}) and use the
-orthognality of the Legendre polynomials.
+orthogonality of the Legendre polynomials.
 \end{proof}
 
 
@@ -851,13 +927,13 @@ Linear growth rate,
     $j_\ell$ & Spherical Bessel function\\
     $\mathcal{P}_\ell$ & Legendre polynomial\\
     $Y_\ell^m$ & Spherical harmonics\\
-    $\delta_D$ & Dirace delta function\\
+    $\delta_D$ & Dirac delta function\\
     $\delta_{ij}$ & Kronecker delta\\
     $\dbar^3 k$ & $\dbar^3 k = d^3 k / (2\pi)^3$\\ 
     \hline
     %
     $a$ & Scale factor, $a=1$ at present\\
-    $H$ & Hubble paramter (time dependent)\\
+    $H$ & Hubble parameter (time dependent)\\
     $D$ & Linear growth factor\\
     $f$ & Linear growth rate $f = d \ln D(a)/d\ln a$\\
     $\delta(\bm{x})$ & Density contrast field of matter, haloes, or galaxies\\
