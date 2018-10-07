@@ -284,49 +284,83 @@ follows from the statistical parity invariance.
 
 \newpage
 \subsection{Power spectrum decomposition in simulation}
+\subsubsection{DU fields}
 
-Note that $U(\bm{k})$ field (equation~\ref{eq:U}) is the density field
-in Fourier space (equation~\ref{eq:delta-s}) with $\delta(\bm{x}) =
-0$. This means that we can obtain $U(\bm{k})$ by applying the
-redshift-distortion to a homogeneous field.\\
+Note that $U(\bm{k})$ field (equation~\ref{eq:U}) is a redshift-space
+density field (equation~\ref{eq:delta-s}) with $\delta(\bm{x}) = 0$.
+%
+\begin{enumerate}
+  \item Distribute uniform random particles in a simulation box;
+  \item displace the randoms with $u(\bm{x})$. The Fourier transform
+    of the density contrast gives the $U(\bm{k})$;
+  \item the displaced data particles give $\delta^s(\bm{k})$. The
+    residual is,
+    \begin{equation}
+      D(\bm{k}) = \delta^s(\bm{k}) - U(\bm{k});
+    \end{equation}
+\end{enumerate}
 
-We distribute random particles homogeneously in a simulation box, and
-displace the particles according to the displacement field
-$\bm{u}(\bm{x})$. Since the displacement field is defined at data
-particle (halo) positions, we use the velocity of the nearest data
-particle; this is a piece-wise-constant interpolation in Voronoi
-cells; another common interpolation is to use a piece-wise-linear
-interpolation using the Delaunay tessellation. The Fourier transform
-of this redshift-space `random' field is $U(\bm{k})$, and the residual
-is the $D(\bm{k})$ field,
+\vspace{2mm}
+\subsubsection{DU power spectra}
+
+The shot-noise-subtracted power spectra are,
+%
+\begin{align}
+  P_{DD}(k, \mu) &= V^{-1} \left\langle D(\bm{k}) D(\bm{k})^* \right\rangle
+                  - \bar{n}^{-1}_\mathrm{data} - \bar{n}^{-1}_\mathrm{rand},\\
+  P_{DU}(k, \mu) &= V^{-1} \, \mathrm{Re}
+                   \left\langle D(\bm{k}) U(\bm{k})^* \right\rangle
+                   + \bar{n}^{-1}_\mathrm{rand},\\
+  P_{UU}(k, \mu) &= V^{-1} \left\langle U(\bm{k}) U(\bm{k})^* \right\rangle
+                  - \bar{n}^{-1}_\mathrm{rand}.
+\end{align}
+
+\vspace{5mm}
+\paragraph{Shot noise}
+
+The auto-power spectrum of discrete points contains the usual shot
+noise,
+%
+\begin{align}
+  V^{-1} \left\langle \delta^s(\bm{k}) \delta^s(\bm{k})^* \right\rangle
+  &\sim \bar{n}_\mathrm{data}^{-1},\\
+  V^{-1} \left\langle U(\bm{k}) U(\bm{k})^* \right\rangle
+  &\sim \bar{n}_\mathrm{rand}^{-1}.
+\end{align}
+%
+The cross power of data and randoms do not have a shot noise in
+average because the they are at different positions,
+\begin{equation}
+  V^{-1} \left\langle \delta^s(\bm{k}) U(k)^* \right\rangle \sim 0.
+\end{equation}
+%
+Therefore, the shot noise in $P_{DU}$ is,
 %
 \begin{equation}
-  D(\bm{k}) = \delta^s(\bm{k}) - U(\bm{k}).
-\end{equation}
-
-We estimate the $P_{UU}$ power spectrum in 2-dimensional bins of $(k, \mu)$
-%
-\begin{equation}
-  P_{UU}(k, \mu) = V^{-1} \left\langle U(\bm{k}) U(\bm{k})^* \right\rangle
-                  - \bar{n}^{-1}_\mathrm{rand}
+  V^{-1} \left\langle D(\bm{k}) U(\bm{k})^* \right\rangle
+  = V^{-1} \left\langle \delta^s(\bm{k}) U(\bm{k})^* \right\rangle
+    - V^{-1} \left\langle U(\bm{k}) U(\bm{k})^* \right\rangle
+  \sim -\bar{n}_\mathrm{rand}^{-1}
 \end{equation}
 %
-where $V$ is the volume of the simulation box, and
-$\bar{n}_\mathrm{rand}$ is the number density of the homogeneous
-random field.
 
-The cross power do not have shot noise in average,
+Finally, the shot noise in $P_{DD}$ is,
 \begin{equation}
-  P_{DU}(k, \mu) = V^{-1} \mathrm{Re}
-                  \left\langle D(\bm{k}) U(\bm{k})^* \right\rangle.
+  V^{-1} \left\langle [\delta^s(\bm{k}) - U(\bm{k})]
+  [\delta^s(\bm{k}) - U(\bm{k})]^* \right\rangle
+  \sim \bar{n}_\mathrm{data}^{-1} + \bar{n}_\mathrm{rand}^{-1}.
 \end{equation}
 
 
 
-%\begin{equation}
-%  \left\langel \delta^2(\bm{k}) \right\rangle = 0.
-%\end{equation}
+\paragraph{Velocity field interpolation}
 
+Displacing the random particles require the displacement field at
+random positions, while the displacement field is provided only at
+data particle (halo) positions. We use a piece-wise-constant
+interpolation in Voronoi cells, which means we use the velocity of the
+nearest data particle. Another common interpolation is a
+piece-wise-linear interpolation with the Delaunay tessellation.
 
 
 %
