@@ -1,4 +1,4 @@
-#
+
 # lambdalib package
 #   The Libarary for the Lambda project
 #
@@ -13,11 +13,11 @@ import h5py
 import json
 
 from lambdalib.lambda_fitting import fit_lambda
-import lambdalib.power
+#import lambdalib.power
 import lambdalib.characteristic_function
 import lambdalib.util
 from lambdalib.taruya import TaruyaModel
-
+from lambdalib.power import load_matter_power, load_halo_power, load_theta_power
 
 #
 # Internally used tools
