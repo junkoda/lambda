@@ -15,14 +15,9 @@ import json
 from lambdalib.lambda_fitting import fit_lambda
 import lambdalib.power
 import lambdalib.characteristic_function
+import lambdalib.util
+from lambdalib.taruya import TaruyaModel
 
-#
-# Global configuration
-#
-_this_dir = os.path.dirname(os.path.realpath(__file__))
-_lambda_dir = os.path.abspath(_this_dir + '/../..')
-_data_dir = _lambda_dir + '/data'
-_sim_default = 'wizcola' # can be changed by select_sim()
 
 #
 # Internally used tools
@@ -31,11 +26,13 @@ _sim_default = 'wizcola' # can be changed by select_sim()
 # ...
 def _check_sim(sim):
     """Check sim is a valid simulation,
-    check the directory exists under _data_dir
+    check the directory exists under util.data_dir()
     """
+
+    data_dir = lambdalib.util.data_dir()
     
-    sims = sorted([x for x in os.listdir(_data_dir)
-                   if os.path.isdir(_data_dir + '/' + x)])
+    sims = sorted([x for x in os.listdir(data_dir)
+                   if os.path.isdir(data_dir + '/' + x)])
 
     if sim not in sims:
         raise ValueError('sim = %s does not exist. Available sims %s' %
@@ -60,16 +57,20 @@ def info(sim=None, isnp=None):
 
     if sim is None:
         """Return a list of simulations"""
-        
-        print('Project directory: ', _lambda_dir)
-        print('Data directory: ', _data_dir)
-        
-        return sorted([x for x in os.listdir(_data_dir)
-                   if os.path.isdir(_data_dir + '/' + x)])
 
-    _check_sim(sim)    
-    
-    with open('%s/%s/param.json' % (_data_dir, sim)) as f:
+        data_dir = lambdalib.util.data_dir()
+        
+        print('Project directory: ', lambdalib.util.lambda_dir())
+        print('Data directory: ', data_dir)
+        
+        return sorted([x for x in os.listdir(data_dir)
+                   if os.path.isdir(data_dir + '/' + x)])
+
+    lambdalib.util.check_sim(sim)
+
+    data_dir = lambdalib.util.data_dir()
+
+    with open('%s/%s/param.json' % (data_dir, sim)) as f:
         d = json.load(f)
 
     if isnp is None:
@@ -92,11 +93,12 @@ def load_lambda(sim, isnp):
       sim (str): simulation name
     """
 
-    _check_sim(sim)
+    lambdalib.util.check_sim(sim)
+    data_dir = lambdalib.util.data_dir()
     isnp = _isnp_str(isnp)
     
     d ={}
-    filename = '%s/%s/lambda/lambda_summary_%s.h5' % (_data_dir, sim, isnp)
+    filename = '%s/%s/lambda/lambda_summary_%s.h5' % (data_dir, sim, isnp)
     
     with h5py.File(filename, 'r') as f:
         d['PDD'] = f['PDD'][:]
@@ -125,31 +127,36 @@ def load_power_spectrum(kind, sim, isnp=None, *, nc=None):
       isnp (str): snapshot index
     """
 
-    _check_sim(sim)
-    
+    lambdalib.util.check_sim(sim)
+    data_dir = lambdalib.util.data_dir()
+            
     if kind == 'linear':
-        return lambdalib.power.load_linear(sim, _data_dir)
+        return lambdalib.power.load_linear(sim, data_dir)
     elif kind == 'halo':
         isnp = _isnp_str(isnp)
-        return lambdalib.power.load_halo_power(sim, isnp, _data_dir)
+        return lambdalib.power.load_halo_power(sim, isnp, data_dir)
     elif kind == 'theta':
         isnp = _isnp_str(isnp)
-        return lambdalib.power.load_theta_power(sim, isnp, _data_dir, nc)
+        return lambdalib.power.load_theta_power(sim, isnp, data_dir, nc)
     else:
         raise ValueError('Unknown power spectrum name: %s' % kind)
 
+    
 def load_characteristic_function(sim, isnp):
     """
-    Load characteristic function
+    Load characteristic function data
 
     Args:
       sim (str): wizcola, wizcola_particles, nbody
       isnp (str): snapshot index
     """
 
-    _check_sim(sim)
+    lambdalib.util.check_sim(sim)
+    data_dir = lambdalib.util.data_dir()
+    
     isnp = _isnp_str(isnp)
 
-    path = '%s/%s/characteristic_function' % (_data_dir, sim)
+    path = '%s/%s/characteristic_function' % (data_dir, sim)
 
     return lambdalib.characteristic_function.load(path, isnp)
+
