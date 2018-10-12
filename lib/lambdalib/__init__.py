@@ -14,6 +14,7 @@ import json
 
 from lambdalib.lambda_fitting import fit_lambda
 import lambdalib.power
+import lambdalib.characteristic_function
 
 #
 # Global configuration
@@ -39,6 +40,14 @@ def _check_sim(sim):
     if sim not in sims:
         raise ValueError('sim = %s does not exist. Available sims %s' %
                          (sim, sims))
+
+def _isnp_str(isnp):
+    if isinstance(isnp, str):
+        return isnp
+    elif isinstance(isnp, int):
+        isnp = '%03d' % isnp
+    else:
+        raise TypeError('Unknown type for isnp: {}; must be int or str'.format(isnp))
 
 
 #
@@ -66,8 +75,7 @@ def info(sim=None, isnp=None):
     if isnp is None:
         return d
 
-    if isinstance(isnp, int):
-        isnp = '%03d' % isnp
+    isnp = _isnp_str(isnp)
 
     if not isnp in d['snapshot']:
         raise ValueError('isnp %s is not available in %s' % (isnp, sim))
@@ -85,6 +93,7 @@ def load_lambda(sim, isnp):
     """
 
     _check_sim(sim)
+    isnp = _isnp_str(isnp)
     
     d ={}
     filename = '%s/%s/lambda/lambda_summary_%s.h5' % (_data_dir, sim, isnp)
@@ -121,8 +130,26 @@ def load_power_spectrum(kind, sim, isnp=None, *, nc=None):
     if kind == 'linear':
         return lambdalib.power.load_linear(sim, _data_dir)
     elif kind == 'halo':
+        isnp = _isnp_str(isnp)
         return lambdalib.power.load_halo_power(sim, isnp, _data_dir)
     elif kind == 'theta':
+        isnp = _isnp_str(isnp)
         return lambdalib.power.load_theta_power(sim, isnp, _data_dir, nc)
     else:
         raise ValueError('Unknown power spectrum name: %s' % kind)
+
+def load_characteristic_function(sim, isnp):
+    """
+    Load characteristic function
+
+    Args:
+      sim (str): wizcola, wizcola_particles, nbody
+      isnp (str): snapshot index
+    """
+
+    _check_sim(sim)
+    isnp = _isnp_str(isnp)
+
+    path = '%s/%s/characteristic_function' % (_data_dir, sim)
+
+    return lambdalib.characteristic_function.load(path, isnp)
