@@ -26,6 +26,7 @@ def load_linear(sim):
 
     return d
 
+
 def _load_power(file_pattern, isnp):
     filenames = glob.glob(file_pattern)
 
