@@ -17,7 +17,7 @@ from lambdalib.lambda_fitting import fit_lambda
 import lambdalib.characteristic_function
 import lambdalib.util
 from lambdalib.taruya import TaruyaModel
-from lambdalib.power import load_matter_power, load_halo_power, load_theta_power
+from lambdalib.power import load_linear_power, load_matter_power, load_halo_power, load_theta_power
 
 #
 # Internally used tools
@@ -116,30 +116,6 @@ def load_lambda(sim, isnp):
 
     return d
         
-
-def load_power_spectrum(kind, sim, isnp=None, *, nc=None):
-    """
-    Load real-space power spectrum
-
-    Args:
-      sim (str): wizcola, wizcola_particles, nbody
-      kind (str): linear, matter, halo, DTFE
-      isnp (str): snapshot index
-    """
-
-    lambdalib.util.check_sim(sim)
-    data_dir = lambdalib.util.data_dir()
-            
-    if kind == 'linear':
-        return lambdalib.power.load_linear(sim, data_dir)
-    elif kind == 'halo':
-        isnp = _isnp_str(isnp)
-        return lambdalib.power.load_halo_power(sim, isnp, data_dir)
-    elif kind == 'theta':
-        isnp = _isnp_str(isnp)
-        return lambdalib.power.load_theta_power(sim, isnp, data_dir, nc)
-    else:
-        raise ValueError('Unknown power spectrum name: %s' % kind)
 
     
 def load_characteristic_function(sim, isnp):

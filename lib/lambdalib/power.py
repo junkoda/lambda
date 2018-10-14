@@ -6,7 +6,7 @@ import numpy as np
 import glob
 import lambdalib.util
 
-def load_linear(sim):
+def load_linear_power(sim):
     """
     Linearly extrapolated power spectrum at redshift=0
     Returns:
@@ -95,10 +95,11 @@ def load_matter_power(sim, isnp):
     return _load_power(filename, isnp)
     
 
-def load_theta_power(sim, isnp, nc=None):
+def load_theta_power(sim, isnp):
     """
     Args:
-      nc (int): resolution e.g. 324 for directory nc324
+      sim (str): simulation name
+      isnp (str): snapshot index
 
     Returns: d (dict)
       d['k'] (array): wave number [h/Mpc]
@@ -114,17 +115,10 @@ def load_theta_power(sim, isnp, nc=None):
 
     data_dir = lambdalib.util.data_dir()
 
-    if nc is None:
-        path = '%s/%s/theta_power/nc*/' % (data_dir, sim)
-        dirs = glob.glob(path)
-        
-        if not dirs:
-            raise FileNotFoundError('nc directories not found in %s' % path)
-        nc_dir = sorted(dirs)[-1]
-    else:
-        nc_dir = '%s/%s/theta_power/nc%d' % (data_dir, sim, nc)
+    path = '%s/%s/theta_power' % (data_dir, sim)
+    lambdalib.util.check_isnp(path, isnp)
     
-    path = '%s/%s/theta_power_*.txt' % (nc_dir, isnp)
+    path = '%s/%s/theta_power/%s/theta_power_*.txt' % (data_dir, sim, isnp)
     filenames = glob.glob(path)
 
     if not filenames:
