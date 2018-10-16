@@ -105,8 +105,8 @@ def load_theta_power(sim, isnp):
       d['k'] (array): wave number [h/Mpc]
       d['nmodes'] (array): number of modes in bins
       d['summary']['Pdd']: Pdd density-density power spectrum
-      d['summary']['Pdt']: f Pdt density-theta cross-power spectrum
-      d['summary']['Pdd']: f^2 Ptt theta-theta power spectrum
+      d['summary']['Pdt']: Pdt density-theta cross-power spectrum
+      d['summary']['Pdd']: Ptt theta-theta power spectrum
       d['P']: P[ik, icol, irealisation]
               icol=0: Pdd
               icol=1: Pdt
@@ -130,7 +130,7 @@ def load_theta_power(sim, isnp):
     P = None
 
     params = lambdalib.info(sim, isnp)
-    aH = params['a']*params['H']
+    aHf = params['a']*params['H']*params['f']
 
     for i, filename in enumerate(filenames):
         a = np.loadtxt(filename)
@@ -156,6 +156,25 @@ def load_theta_power(sim, isnp):
     d['P'] = P[:, 1:, :]
     d['k'] = P[:, 0, 0]
     d['nmodes'] = P[:, 1, 0]
+    d['summary'] = summary
+
+    return d
+
+
+def load_bias(sim, isnp):
+    halo = load_halo_power(sim, isnp)
+    matter = load_matter_power(sim, isnp)
+
+    b = np.sqrt(halo['P']/matter['P'])
+    n= b.shape[1]
+
+    summary = {}
+    summary['b'] = np.mean(b, axis=1)
+    summary['db'] = np.std(b, axis=1)/math.sqrt(n)
+
+    d = {}
+    d['k'] = halo['k']
+    d['b'] = b
     d['summary'] = summary
 
     return d

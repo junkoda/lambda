@@ -32,6 +32,10 @@ k[ik, imu]     mean k in 2D bin
 mu[ik, imu]    meann mu in 2D bin
 ```
 
+Array size is 100 x 10
+bin width dk = 0.01 h/Mpc
+          dmu = 0.1
+
 ## Example
 
 ```python

@@ -17,7 +17,8 @@ from lambdalib.lambda_fitting import fit_lambda
 import lambdalib.characteristic_function
 import lambdalib.util
 from lambdalib.taruya import TaruyaModel
-from lambdalib.power import load_linear_power, load_matter_power, load_halo_power, load_theta_power
+from lambdalib.power import load_linear_power, load_matter_power, load_halo_power, load_theta_power, load_bias
+from lambdalib.dtfe import load_dtfe_A
 
 #
 # Internally used tools
@@ -96,24 +97,28 @@ def load_lambda(sim, isnp):
     lambdalib.util.check_sim(sim)
     data_dir = lambdalib.util.data_dir()
     isnp = _isnp_str(isnp)
-    
-    d ={}
+
+    d = {}
+    s = {}
     filename = '%s/%s/lambda/lambda_summary_%s.h5' % (data_dir, sim, isnp)
     
     with h5py.File(filename, 'r') as f:
-        d['PDD'] = f['PDD'][:]
-        d['PDU'] = f['PDU'][:]
-        d['PUU'] = f['PUU'][:]
-        d['PDD0'] = f['PDD0'][:]
-        d['dPDD'] = f['dPDD'][:]
-        d['dPDU'] = f['dPDU'][:]
-        d['dPUU'] = f['dPUU'][:]
+        s['PDD'] = f['PDD'][:]
+        s['PDU'] = f['PDU'][:]
+        s['PUU'] = f['PUU'][:]
+        s['PDD0'] = f['PDD0'][:]
+        s['dPDD'] = f['dPDD'][:]
+        s['dPDU'] = f['dPDU'][:]
+        s['dPUU'] = f['dPUU'][:]
         d['k'] = f['k'][:]
         d['mu'] = f['mu'][:]
         d['lambda'] = f['lambda'][:]
         d['redshift'] = f['parameters/z'][()]
         d['nrealisations'] = f['nrealisations']
 
+    d['summary'] = s
+
+        
     return d
         
 
@@ -135,4 +140,5 @@ def load_characteristic_function(sim, isnp):
     path = '%s/%s/characteristic_function' % (data_dir, sim)
 
     return lambdalib.characteristic_function.load(path, isnp)
+
 

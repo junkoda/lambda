@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
 
-def fit_DD(d, ik, imu, f, fit=None, p0=None):
+def fit_DD(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
     """
     Fit P_DD(k, mu, lambda) with an given function 
     f(lambda, y0, ...) = PDD_0 + f(lambda)
@@ -14,8 +14,8 @@ def fit_DD(d, ik, imu, f, fit=None, p0=None):
       fit: dictornary of fitting results
     """
 
-    x = d['lambda']
-    y = d['PDD'][ik, imu, :]/d['PDD0'][ik, imu]
+    x = d['lambda'][:ilambda_max]
+    y = d['PDD'][ik, imu, :ilambda_max]/d['PDD0'][ik, imu]
 
     def ff(x, *params):
         return PDD0*f(x, *params)
@@ -35,12 +35,13 @@ def fit_DD(d, ik, imu, f, fit=None, p0=None):
         fit = {}
 
     fit['PDD_params'] = popt
+    fit['lambdas'] = x
     fit['PDD'] = d['PDD0'][ik, imu]*f(x, *popt)
 
     return fit
 
 
-def fit_DU(d, ik, imu, f, fit=None, p0=None):
+def fit_DU(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
     """
     Fit P_DU(k, mu, lambda) with an given function 
     f(lambda, ...) = A*lambda*f(lambda, ...)
@@ -56,8 +57,8 @@ def fit_DU(d, ik, imu, f, fit=None, p0=None):
     def ff(x, A, *params):
         return A*x*f(x, *params)
 
-    x = d['lambda']
-    y = d['PDU'][ik, imu, :]
+    x = d['lambda'][:ilambda_max]
+    y = d['PDU'][ik, imu, :ilambda_max]
 
     # remove nans
     idx = np.isfinite(y)
@@ -83,12 +84,13 @@ def fit_DU(d, ik, imu, f, fit=None, p0=None):
 
     fit['PDU_amp'] = popt[0]
     fit['PDU_params'] = popt[1:]
+    fit['lambdas'] = x
     fit['PDU'] = ff(x, *popt)
 
     return fit
 
 
-def fit_UU(d, ik, imu, f, fit=None, p0=None):
+def fit_UU(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
     """
     Fit P_UU(k, mu, lambda) with an given function 
     f(lambda, ...) = A*lambda**2*f(lambda, ...)
@@ -103,8 +105,8 @@ def fit_UU(d, ik, imu, f, fit=None, p0=None):
     def ff(x, A, *params):
         return A*x**2*f(x, *params)
 
-    x = d['lambda']
-    y = d['PUU'][ik, imu, :]
+    x = d['lambda'][:ilambda_max]
+    y = d['PUU'][ik, imu, :ilambda_max]
 
     # remove nans
     idx = np.isfinite(y)
@@ -128,13 +130,14 @@ def fit_UU(d, ik, imu, f, fit=None, p0=None):
     fit['PUU_amp'] = popt[0]
     fit['PUU_params'] = popt[1:]
 
+    fit['lambdas'] = x
     fit['PUU'] = ff(x, *popt)
 
     return fit
 
 def fit_lambda(d, ik, imu, f, *,
                kind=('DD', 'DU', 'UU'),
-               p0=None):
+               p0=None, ilambda_max=None):
     """
     Fit lambda plot with a fitting function f:
 
@@ -173,12 +176,12 @@ def fit_lambda(d, ik, imu, f, *,
         return None
 
     if 'DD' in kind:
-        fit_DD(d, ik, imu, f, fit)
+        fit_DD(d, ik, imu, f, fit, ilambda_max=ilambda_max)
 
     if 'DU' in kind:
-        fit_DU(d, ik, imu, f, fit)
+        fit_DU(d, ik, imu, f, fit, ilambda_max=ilambda_max)
 
     if 'UU' in kind:
-        fit_UU(d, ik, imu, f, fit)        
-
+        fit_UU(d, ik, imu, f, fit, ilambda_max=ilambda_max)
+        
     return fit
