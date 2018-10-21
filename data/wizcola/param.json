@@ -1,5 +1,6 @@
 {
     "name": "wizcola",
+    "type": "halo",
     "omega_m": 0.273,
     "boxsize": 600,
     "sigma_v1": 6.059672472275335,

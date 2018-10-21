@@ -13,7 +13,6 @@ import h5py
 import json
 
 from lambdalib.lambda_fitting import fit_lambda
-#import lambdalib.power
 import lambdalib.characteristic_function
 import lambdalib.util
 from lambdalib.taruya import TaruyaModel
