@@ -130,6 +130,8 @@ def load_theta_power(sim, isnp):
     P = None
 
     params = lambdalib.info(sim, isnp)
+
+    # Convert \nabla v to theta = \nabla v / (aHf)
     aHf = params['a']*params['H']*params['f']
 
     for i, filename in enumerate(filenames):
@@ -138,8 +140,8 @@ def load_theta_power(sim, isnp):
         if P is None:
             P = np.zeros((a.shape[0], a.shape[1], n))
 
-        a[:, 3] /= aH
-        a[:, 4] /= aH**2
+        a[:, 3] /= aHf
+        a[:, 4] /= aHf**2
 
         P[:, :, i] = a
 

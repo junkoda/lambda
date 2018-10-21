@@ -43,26 +43,32 @@ class TaruyaModel:
         self.a = a
 
     def ADD(self, isnp, mu):
+        assert(0.0 <= mu <= 1.0)
         fac = self.param[isnp]['f']*self.param[isnp]['D']**4
         return fac*mu**2*self.A11
 
     def ADU(self, isnp, mu):
+        assert(0.0 <= mu <= 1.0)
         fac = 0.5*self.param[isnp]['f']**2*self.param[isnp]['D']**4
         return fac*mu**2*(self.A12 + mu**2*self.A22)
 
     def AUU(self, isnp, mu):
+        assert(0.0 <= mu <= 1.0)
         fac = self.param[isnp]['f']**3*self.param[isnp]['D']**4
         return fac*mu**4*(self.A23 + mu**2*self.A33)
 
     def BDD(self, isnp, mu):
+        assert(0.0 <= mu <= 1.0)
         fac = self.param[isnp]['f']**2*self.param[isnp]['D']**4
         return fac*mu**2*(self.B111 + mu**2*self.B211)
 
     def BDU(self, isnp, mu):
+        assert(0.0 <= mu <= 1.0)
         fac = -0.5*self.param[isnp]['f']**3*self.param[isnp]['D']**4
         return fac*(mu**2*self.B112 + mu**4*self.B212 + mu**6*self.B312)
         
     def BUU(self, isnp, mu):
+        assert(0.0 <= mu <= 1.0)
         fac = self.param[isnp]['f']**4*self.param[isnp]['D']**4
         return fac*(mu**2*self.B122 + mu**4*self.B222 +
                     mu**6*self.B322 + mu**8*self.B422)

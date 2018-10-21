@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.optimize import curve_fit
+import sys
 
 def fit_DD(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
     """
@@ -15,7 +16,7 @@ def fit_DD(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
     """
 
     x = d['lambda'][:ilambda_max]
-    y = d['PDD'][ik, imu, :ilambda_max]/d['PDD0'][ik, imu]
+    y = d['summary']['PDD'][ik, imu, :ilambda_max]/d['summary']['PDD0'][ik, imu]
 
     def ff(x, *params):
         return PDD0*f(x, *params)
@@ -28,7 +29,7 @@ def fit_DD(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
     # fitting
     try:
         popt, pcov = curve_fit(f, x, y)
-    except:
+    except RuntimeError:
         return None
 
     if fit is None:
@@ -36,7 +37,7 @@ def fit_DD(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
 
     fit['PDD_params'] = popt
     fit['lambdas'] = x
-    fit['PDD'] = d['PDD0'][ik, imu]*f(x, *popt)
+    fit['PDD'] = d['summary']['PDD0'][ik, imu]*f(x, *popt)
 
     return fit
 
@@ -58,7 +59,7 @@ def fit_DU(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
         return A*x*f(x, *params)
 
     x = d['lambda'][:ilambda_max]
-    y = d['PDU'][ik, imu, :ilambda_max]
+    y = d['summary']['PDU'][ik, imu, :ilambda_max]
 
     # remove nans
     idx = np.isfinite(y)
@@ -69,14 +70,16 @@ def fit_DU(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
     if p0 is None:
         p0 = [0,]*(f.__code__.co_argcount)
     else:
-        p0 = [0,].append(p0)
-        
+        p0 = [0,] + p0
+
     p0[0] = y[10]/x[10]
 
     # fitting
     try:
         popt, pcov = curve_fit(ff, x, y, p0=p0)
-    except:
+    except RuntimeError:
+        sys.stderr.write('Warning: unable to fit DU with %s; ik=%d imu=%d\n' %
+                         (f.__name__, ik, imu))
         return None
 
     if fit is None:
@@ -106,7 +109,7 @@ def fit_UU(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
         return A*x**2*f(x, *params)
 
     x = d['lambda'][:ilambda_max]
-    y = d['PUU'][ik, imu, :ilambda_max]
+    y = d['summary']['PUU'][ik, imu, :ilambda_max]
 
     # remove nans
     idx = np.isfinite(y)
@@ -114,13 +117,20 @@ def fit_UU(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
     y = y[idx]
 
     # initial guess
-    p0 = [0,]*(f.__code__.co_argcount)
+    if p0 is None:
+        p0 = [0,]*(f.__code__.co_argcount)
+    else:
+        p0 = [0.0,] + p0
+
     p0[0] = y[10]/x[10]**2
+    assert(len(p0) == f.__code__.co_argcount)
 
     # fitting
     try:
         popt, pcov = curve_fit(ff, x, y, p0=p0)
-    except:
+    except RuntimeError:
+        sys.stderr.write('Warning: unable to fit UU with %s; ik=%d imu=%d\n' %
+                         (f.__name__, ik, imu))
         return None
     
 
@@ -172,16 +182,16 @@ def fit_lambda(d, ik, imu, f, *,
 
     fit = {}
 
-    if np.isnan(d['PDD'][ik, imu, 0]):
+    if np.isnan(d['summary']['PDD'][ik, imu, 0]):
         return None
 
     if 'DD' in kind:
-        fit_DD(d, ik, imu, f, fit, ilambda_max=ilambda_max)
+        fit_DD(d, ik, imu, f, fit, p0=p0, ilambda_max=ilambda_max)
 
     if 'DU' in kind:
-        fit_DU(d, ik, imu, f, fit, ilambda_max=ilambda_max)
+        fit_DU(d, ik, imu, f, fit, p0=p0, ilambda_max=ilambda_max)
 
     if 'UU' in kind:
-        fit_UU(d, ik, imu, f, fit, ilambda_max=ilambda_max)
+        fit_UU(d, ik, imu, f, fit, p0=p0, ilambda_max=ilambda_max)
         
     return fit
