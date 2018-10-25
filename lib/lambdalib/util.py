@@ -1,4 +1,5 @@
 import os
+import json
 
 #
 # Global configuration
@@ -65,12 +66,11 @@ def load_param(sim, isnp=None):
     Return simulation info
     """
 
-    data_dir = data_dir()
+    #data_dir = lambdalib.util.data_dir()
+    #data_dir = data_dir()
     check_sim(sim)
 
-    data_dir = lambdalib.util.data_dir()
-
-    with open('%s/%s/param.json' % (data_dir, sim)) as f:
+    with open('%s/%s/param.json' % (_data_dir, sim)) as f:
         d = json.load(f)
 
     if isnp is None:
