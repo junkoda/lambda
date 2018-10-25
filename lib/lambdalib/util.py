@@ -40,3 +40,46 @@ def check_sim(sim):
     if sim not in sims:
         raise ValueError('sim = %s does not exist. Available sims %s' %
                          (sim, sims))
+
+def isnp_str(isnp):
+    """
+    Convert to string if necessary;
+
+    Args:
+      isnp (str or int): snapshot number
+
+    Returns
+      isnp (str): snapshot number 000 - 010
+    """
+
+    if isinstance(isnp, str):
+        return isnp
+    elif isinstance(isnp, int):
+        isnp = '%03d' % isnp
+        return isnp
+    else:
+        raise TypeError('Unknown type for isnp: {}; must be int or str'.format(isnp))
+
+def load_param(sim, isnp=None):
+    """
+    Return simulation info
+    """
+
+    data_dir = data_dir()
+    check_sim(sim)
+
+    data_dir = lambdalib.util.data_dir()
+
+    with open('%s/%s/param.json' % (data_dir, sim)) as f:
+        d = json.load(f)
+
+    if isnp is None:
+        return d
+
+    isnp = isnp_str(isnp)
+
+    if not isnp in d['snapshot']:
+        raise ValueError('isnp %s is not available in %s' % (isnp, sim))
+    
+    return d['snapshot'][isnp]
+

@@ -6,9 +6,11 @@ import numpy as np
 import glob
 import lambdalib.util
 
-def load_linear_power(sim):
+def load_linear_power(sim, isnp=None):
     """
-    Linearly extrapolated power spectrum at redshift=0
+    Linearly extrapolated power spectrum at redshift of isnp
+    Returns z=0 power spectrum if isnp = None
+
     Returns:
       dictionary with
       'k': wavenumbeer [h/Mpc]
@@ -23,6 +25,11 @@ def load_linear_power(sim):
     d['a'] = a
     d['k'] = a[:, 0]
     d['P'] = a[:, 1]
+
+    if isnp is not None:
+        param = lambdalib.util.load_param(sim, isnp)
+        d['P'] *= param['D']**2
+        
 
     return d
 
@@ -133,6 +140,10 @@ def load_theta_power(sim, isnp):
 
     # Convert \nabla v to theta = \nabla v / (aHf)
     aHf = params['a']*params['H']*params['f']
+
+    # Correct sqrt(a) factor in Gadget snapshot
+    if sim == 'nbody':
+        aHf /= math.sqrt(params['a'])
 
     for i, filename in enumerate(filenames):
         a = np.loadtxt(filename)

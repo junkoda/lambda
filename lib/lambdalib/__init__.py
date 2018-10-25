@@ -18,25 +18,7 @@ import lambdalib.util
 from lambdalib.taruya import TaruyaModel
 from lambdalib.power import load_linear_power, load_matter_power, load_halo_power, load_theta_power, load_bias
 from lambdalib.dtfe import load_dtfe_A
-
-#
-# Internally used tools
-#
-
-# ...
-def _check_sim(sim):
-    """Check sim is a valid simulation,
-    check the directory exists under util.data_dir()
-    """
-
-    data_dir = lambdalib.util.data_dir()
-    
-    sims = sorted([x for x in os.listdir(data_dir)
-                   if os.path.isdir(data_dir + '/' + x)])
-
-    if sim not in sims:
-        raise ValueError('sim = %s does not exist. Available sims %s' %
-                         (sim, sims))
+from lambdalib.sigma import load_sigma_ab
 
 def _isnp_str(isnp):
     if isinstance(isnp, str):
