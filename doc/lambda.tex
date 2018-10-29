@@ -9,6 +9,7 @@
 \usepackage{sectsty} % change section colours
 \usepackage{lipsum}
 \usepackage{titlesec}
+\usepackage{mathrsfs}
 
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
@@ -418,13 +419,14 @@ where $b$ is the linear bias and $m$ stands for matter.\\
   P_{ab}(k, \mu) = \mathring{P}_{ab}(k, \mu) \exp \left[
     \frac{A_{ab}}{\mathring{P}_{ab}}
     - \frac{1}{2} \left( \frac{A_{ab}}{\mathring{P}_{ab}} \right)^2
-    + \frac{B_{ab}}{\mathring{P}_{ab}} - k^2 \mu^2 (\sigma_v^2 - \sigma_{ab}^2)
+    + \frac{B_{ab}}{\mathring{P}_{ab}}
+    + \frac{C_{ab}}{\mathring{P}_{ab}}
     \right],
 \end{equation}
 %
 where $a$, $b$ takes $D$ or $U$.\\
 
-$\mathring{P}_{ab}(\bm{k})$ are real-space quantities,
+$\mathring{P}_{ab}(\bm{k})$ are the linear RSD,
 %
 \begin{align}
   &\mathring{P}_{DD}(k) = P_{\delta\delta}(k) = b^2 P_{mm}(k),\\
@@ -432,19 +434,15 @@ $\mathring{P}_{ab}(\bm{k})$ are real-space quantities,
   &\mathring{P}_{UU}(k, \mu) = P_{u'u'}(k, \mu) = f^2\mu^4 P_{\theta\theta}(k),
 \end{align}
 %
-$A_{ab}(k, \mu)$ and $B_{ab}(k, \mu)$ are same as the TNS model,
-$\sigma_v$ is the rms of the displace field,
+$A_{ab}(k, \mu)$ and $B_{ab}(k, \mu)$ are same as the TNS model, and,
 %
 \begin{equation}
-  \sigma_v^2 = \left\langle u(\bm{x})^2 \right\rangle
+  C_{ab}(k, \mu) =
+  \frac{1}{2} \int\!\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
+  \left\langle u'(\bm{x}) u'(\bm{y}) \right\rangle
+  \left\langle (-ik_z \Delta u )^2 \right\rangle.
 \end{equation}
-%
-which is,
-%
-\begin{equation}
-  \bar{\sigma}_v^2 = \frac{f^2}{6\pi^2} \int_0^\infty \!\! \bar{P}(k) dk
-\end{equation}
-in the linear theory, and,
+
 %
 \begin{equation}
   \sigma_{ab}^2(k, \mu) = \frac{1}{\mathring{P}_{ab}(k, \mu)}
@@ -472,16 +470,17 @@ where $\xi$'s are correlation functions,
 
 %\vspace{5mm}
 
-Define generating functions, and apply cumulant expansion,
+We define generating functions, $\mathcal{M}_{ab}$, and apply the cumulant
+expansion,
 \begin{align}
   \mathcal{M}_{ab}(\bm{k}, J) &\equiv
   \int \!\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
   \phi_a(\bm{x}) \phi_b(\bm{y}) e^{-iJ\Delta u} \right\rangle\\
   %
   &= \exp\left[
-    \mathcal{C}_{ab}^{[0]}(\bm{k}) +
-    \mathcal{C}{ab}^{[1]}(\bm{k}) J +
-    \frac{1}{2} \mathcal{C}_{ab}^{[2]}(\bm{k}) J^2 + \cdots
+    \mathscr{C}_{ab}^{[0]}(\bm{k}) +
+    \mathscr{C}_{ab}^{[1]}(\bm{k}) J +
+    \frac{1}{2} \mathscr{C}_{ab}^{[2]}(\bm{k}) J^2 + \cdots
     \right],
 \end{align}
 where $a$,$b$ takes $D$ or $U$, $\Delta u \equiv u(\bm{x}) - u(\bm{y})$, and,
@@ -497,61 +496,94 @@ The parameter $J$ is a free real number, which reproduces the decomposed power w
 The cumulant expansion is a Taylor expansion of $\ln \mathcal{M}_{ab}$ in powers of $J$,
 %
 \begin{equation}
-  \mathcal{C}_{ab}^{[n]} = \frac{d^n}{dJ^n}
+  \mathscr{C}_{ab}^{[n]} = \frac{d^n}{dJ^n}
   \ln \mathcal{M}_{ab}(\bm{k}, J) \Big|_{J=0}
 \end{equation}
 
 \begin{equation}
-  C_{ab}^{[0]}(\bm{k}) =
+  \mathscr{C}_{ab}^{[0]}(\bm{k}) =
   \ln \mathcal{M}_{ab}(\bm{k}, 0) \equiv \ln \mathring{P}_{ab}(\bm{k})
 \end{equation}
 
 \begin{align}
-  C_{ab}^{[1]}(\bm{k}) &= \frac{1}{\mathring{P}_{ab}(\bm{k})}
+  \mathscr{C}_{ab}^{[1]}(\bm{k}) &= \frac{1}{\mathring{P}_{ab}(\bm{k})}
   \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
   \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u) \right\rangle
 \end{align}
-
+%
 \begin{align}
-  C_{ab}^{[2]}(\bm{k}) &=
-  - \left[ \frac{C_{ab}^{[1]}}{\mathring{P}_{ab}(\bm{k})} \right]^2
+  \mathscr{C}_{ab}^{[2]}(\bm{k}) &=
+  - \left[ \frac{\mathscr{C}_{ab}^{[1]}}{\mathring{P}_{ab}(\bm{k})} \right]^2
   + \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
   \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u)^2 \right\rangle
 \end{align}
 
-The TNS $A$ term is defined as,
+
+The power spectrum using cumulant expansion is,
+\begin{equation}
+  P_{ab}(\bm{k}) = \mathcal{M}_{ab}(\bm{k}, k_z) = 
+  \mathring{P}_{ab}(\bm{k}) \exp\left[
+    k_z \mathscr{C}^{[1]}_{ab}
+    + \frac{1}{2} k_z^2 \mathscr{C}^{[2]}_{ab} + \cdots
+    \right],
+\end{equation}
+with,
+\begin{equation}
+  k_z \mathscr{C}^{[1]}_{ab}(\bm{k})
+  = \frac{A(\bm{k})}{\mathring{P}_{ab}(\bm{k})},
+\end{equation}
+and
+\begin{equation}
+  \frac{1}{2} k^2_z \mathscr{C}^{[2]}_{ab}(\bm{k})
+  = -\frac{1}{2} \left[\frac{A_{ab}(\bm{k})}{\mathring{P}_{ab}(\bm{k})}\right]^2
+    + \frac{B_{ab}(\bm{k}) + C_{ab}(\bm{k})}{\mathring{P}_{ab}(\bm{k})}
+\end{equation}
+
+
+The TNS $ABC$ terms are defined as,
 \begin{align}
-  A_{ab}(\bm{k}) \equiv
-  \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
-  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i k_z \Delta u) \right\rangle
+  A_{ab}(\bm{k}) &=
+    \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \left\langle
+    \phi_a(\bm{x}) \phi_b(\bm{y}) (-i k_z \Delta u) \right\rangle,\\
+  B_{ab}(\bm{k}) &=
+   \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
+    \left\langle \bar{\phi}_a(\bm{x})
+                  (-ik_z \Delta \bar{u}) \right\rangle
+    \left\langle \bar{\phi}_b(\bm{y})
+                  (-ik_z \Delta \bar{u}) \right\rangle,\\
+  C_{ab}(\bm{k}) &=
+    \frac{1}{2} \int\!\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
+    \left\langle u'(\bm{x}) u'(\bm{y}) \right\rangle
+    \left\langle (-ik_z \Delta u )^2 \right\rangle.
 \end{align}
 
-
-We compute the leading order of this second cumulant using linear
-theory,
+The Wick theorem for Gaussian random variables is used for the
+4th-order statistics is split to $B$ and $C$,
 \begin{equation}
   \left\langle
-  \phi_a(\bm{x}) \phi_b(\bm{y}) (-i \Delta u)^2 \right\rangle
+  \phi_a(\bm{x}) \phi_b(\bm{y}) (\Delta u)^2 \right\rangle
   \approx
   2 \left\langle \bar{\phi}_a(\bm{x})
-                  (-i\Delta \bar{u}) \right\rangle
+                  \Delta \bar{u} \right\rangle
     \left\langle \bar{\phi}_b(\bm{y})
-                  (-i\Delta \bar{u}) \right\rangle
-  - \left\langle \bar{\phi}_a(\bm{x})
+                  \Delta \bar{u} \right\rangle
+  + \left\langle \bar{\phi}_a(\bm{x})
                  \bar{\phi}_a(\bm{y}) \right\rangle
-  \left\langle (\Delta \bar{u})^2 \right\rangle,
+  \left\langle (\Delta \bar{u})^2 \right\rangle.
 \end{equation}
-using a property of Gaussian random variables.
-
 
 \begin{equation}
-  B_{ab}(\bm{k}) \equiv
-  \int\!d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
-  \left\langle \bar{\phi}_a(\bm{x})
-                  (-ik_z \Delta \bar{u}) \right\rangle
-  \left\langle \bar{\phi}_b(\bm{y})
-                  (-ik_z \Delta \bar{u}) \right\rangle
+  \left\langle (\Delta u)^2 \right\rangle
+  = \sigma_v^2 - \xi_{uu}(\bm{r})
 \end{equation}
+where,
+$\sigma_v$ is the rms of the displace field,
+%
+\begin{equation}
+  \sigma_v^2 = \left\langle u(\bm{x})^2 \right\rangle = 
+  \frac{f^2}{6\pi^2} \int_0^\infty \!\! P_{\theta\theta}(k) dk.
+\end{equation}
+%
 
 %
 % Numerical integration (xi)
@@ -637,69 +669,47 @@ finite as $\mu \rightarrow 0$.
 \clearpage
 \paragraph{UU}
 
+\begin{equation} \begin{split}
+  \left\langle u'(\bm{x}) u'(\bm{y}) ( \Delta u )^2 \right\rangle
+  &=  \left\langle u'(\bm{x}) u'(\bm{y}) \right\rangle
+      \left\langle (\Delta u )^2 \right\rangle
+      + 2 \left\langle u'(\bm{x}) \Delta u \right\rangle
+          \left\langle u'(\bm{y}) \Delta u \right\rangle,\\
+  &= 2 \left\langle u'(\bm{x}) u'(\bm{y}) \right\rangle
+       \left[ \sigma_v^2 - \xi_{uu}(\bm{r}) \right]
+    - 2 \left\langle u'(\bm{x}) u(\bm{y}) \right\rangle
+        \left\langle u'(\bm{y}) u(\bm{x}) \right\rangle,\\
+  &= 2 \sigma_v^2 \xi_{u'u'}(\bm{r})
+     + 2 [\partial_r^2 \xi_{uu}(\bm{r})] \xi_{uu}(\bm{r}) 
+     + 2 [\partial_r \xi_{uu}(\bm{r})]^2,\\
+  &= 2 \sigma_v^2 \xi_{u'u'}(\bm{r})
+     + \partial_r^2 \xi_{uu}(\bm{r})^2,
+\end{split}\end{equation}
+where,
 \begin{equation}
-  \sigma_{UU}^2(k, \mu) = \sigma_v^2 - \sigma_{UU}(k) - ...
+  \partial_r = \frac{\partial}{\partial r_z}.
 \end{equation}
 
-\begin{equation}
-  C_{UU}(\bm{k}) = \int \!\! d^3 r \, e^{-i\bm{k}\cdot\bm{r}} \xi_{u'u'}(\bm{r})
-  \xi_{uu}(\bm{r})
-\end{equation}
+\begin{equation} \begin{split}
+  \sigma_{UU}^2(\bm{k})
+  &\equiv \frac{1}{2}\frac{1}{f^2\mu^4 \bar{P}(k)}
+     \int\!\! d^3r \, e^{-i\bm{k}\cdot\bm{r}}
+     \left\langle u'(\bm{x}) u'(\bm{y}) ( -i \Delta u )^2 \right\rangle,\\
+  &= \sigma_v^2
+     + \frac{1}{2 f^2\mu^4 \bar{P}(k)}
+       \int\!\! d^3r \, e^{-i\bm{k}\cdot\bm{r}}
+       \partial_r^2 \xi_{uu}(\bm{r})^2,\\
+  &= \sigma_v^2 - \frac{k^2}{2 f^2 \mu^2 \bar{P}(k)}
+     \int\!\! d^3r \, e^{-i\bm{k}\cdot\bm{r}} \xi_{uu}(\bm{r})^2.
+\end{split}\end{equation}
 
 \begin{equation}
-  \sigma_{UU}(k, \mu) = \sigma_v^2 - \sum_{\ell} \sigma_{UU(\ell)}(k) \mathcal{P}_\ell(\mu)
+  \xi_{uu}(r, \nu)^2
+  = \left[\xi_{uu(0)}^2 + \frac{1}{5} \xi_{uu(2)}^2 \right]
+    + 2 \xi_{uu(2)} \left[
+        \xi_{uu(0)} + \frac{1}{7} \xi_{uu(2)} \right]\mathcal{P}_2(\nu)
+    +\frac{18}{35} \xi_{uu(2)}^2 \mathcal{P}_4(\nu)
 \end{equation}
-
-\begin{align}
-  &\sigma_{UU(0)}(k) = \frac{4\pi}{5 \mu^4 \bar{P}(k)}
-    \int \! r^2 dr j_0(kr) \left[
-    \xi_0(r) \xi_{uu(0)}(r) + \frac{4}{7} \xi_2(r) \xi_{uu(2)}(r) \right]\\
-  &\sigma_{UU(2)}(k) = -\frac{4\pi}{\mu^4 \bar{P}(k)}
-    \int \! r^2 dr j_2(kr) \left[
-    \frac{1}{5} \xi_0 \xi_{uu(2)}
-    +\frac{4}{7} \xi_2 \xi_{uu(0)}
-    +\frac{8}{49} \xi_2 \xi_{uu(2)}
-    + \frac{16}{245} \xi_4 \xi_{uu(2)}\right]\\
-  &\sigma_{UU(4)}(k) = 4\pi \frac{8}{35 \mu^4 \bar{P}(k)}
-    \int\! r^2 dr j_4(kr)\left[
-      \xi_4(r)\xi_{uu(0)}
-      + \frac{9}{7} \xi_2 \xi_{uu(2)}
-      + \frac{20}{77} \xi_4 \xi_{uu(2)}
-    \right]\\
-  &\sigma_{UU(6)}(k) = -4\pi \frac{40}{385\mu^4 \bar{P}(k)}
-    \int\! r^2 dr j_6(kr) \xi_4(r) \xi_{uu(2)}(r)
-\end{align}
-
-\begin{equation}
-  \xi_{u'u'}(r, \nu)/f^2 = \frac{1}{5} \xi_0(r)
-  + \frac{4}{7} \xi_2(r) \mathcal{P}_2(\nu)
-  + \frac{8}{35} \xi_4(r) \mathcal{P}_4(\nu)
-\end{equation}
-
-\begin{equation}
-  \mu^4 = \frac{1}{5} + \frac{4}{7} \mathcal{P}_2(\mu)
-          + \frac{8}{35} \mathcal{P}_4(\mu)
-\end{equation}
-
-\begin{equation}
-  \mathcal{P}_2(x) \mathcal{P}_2(x)
-  = \frac{1}{5} \mathcal{P}_0(x) + \frac{2}{7} \mathcal{P}_2(x)
-    + \frac{18}{35} \mathcal{P}_4(x)
-\end{equation}
-
-\begin{equation}
-  \mathcal{P}_2(x) \mathcal{P}_4(x)
-  = \frac{2}{7} \mathcal{P}_2(x)
-  + \frac{20}{77} \mathcal{P}_4(x)
-  + \frac{5}{11} \mathcal{P}_6(x)
-\end{equation}
-
-Divergence problem remains. As $\mu \rightarrow 0$,
-\begin{equation}
-  f\mu^4 P_{\theta\theta}(k, \mu) \exp [ - k_z^2 \sigma_{UU}(k, \mu) ]
-\end{equation}
-diverges exponentially.
-
 
 %
 % Numerical integration (xi)

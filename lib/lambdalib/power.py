@@ -15,6 +15,7 @@ def load_linear_power(sim, isnp=None):
       dictionary with
       'k': wavenumbeer [h/Mpc]
       'P': linear power spectrum [1/h Mpc]^3
+      'interp': interpolation function P(k)
     """
 
     data_dir = lambdalib.util.data_dir()
@@ -29,7 +30,13 @@ def load_linear_power(sim, isnp=None):
     if isnp is not None:
         param = lambdalib.util.load_param(sim, isnp)
         d['P'] *= param['D']**2
-        
+
+    try:
+        from scipy.interpolate import interp1d
+        d['interp'] = interp1d(d['k'], d['P'], kind='cubic')
+    except ImportError:
+        print('Warning: scipy.interpolate unabailable '
+              'for linear power interpolation.')
 
     return d
 
