@@ -111,9 +111,9 @@ and redshift-space power spectrum,
   P^s(\bm{k}) = \int \! d^3 r \, e^{-i\bm{k}\cdot\bm{r}}
   \Big\langle
       [1 + \delta(\bm{x})][1 + \delta(\bm{y})]
-      e^{-ik_z [u(\bm{x}) - u(\bm{y})]}\Big\rangle.
+      e^{-ik_z [u(\bm{x}) - u(\bm{y})]}\Big\rangle,
 \end{equation}
-$\delta_D$ is the Dirac delta function.
+where $\delta_D$ is the Dirac delta function and $\bm{r} = \bm{x} - \bm{y}$.
 
 
 \newpage
@@ -154,6 +154,24 @@ We decompose the redshift-space power spectrum as,
 \vspace{5mm}
 \textsc{Definition}
 \vspace{-2mm}
+\begin{align}
+  \hat{\delta}(\bm{k}) &= D(\bm{k}) + U(\bm{k}),\\
+  D(\bm{k}) &= \int \! d^3 x \, e^{-i\bm{k}\cdot\bm{x}} \delta(\bm{x})
+                                e^{-ik_z u(\bm{x})},\\
+  \label{eq:U}
+  U(\bm{k}) &= \int \! d^3 x \, e^{-i\bm{k}\cdot\bm{x}}
+                             \left[ e^{-ik_z u(\bm{x})} - 1 \right].\\
+            &=   \int\! d^3 x \, e^{-i \bm{k}\cdot\bm{x}}
+              u'(\bm{x}) e^{-ik_z u(\bm{x})},
+\end{align}
+%
+where,
+\begin{align}
+  &u'(\bm{x}) = - \frac{\partial}{\partial z} u(\bm{x}),\\
+  &\bm{r}     = \bm{x} - \bm{y}.
+\end{align}
+%
+The auto- and cross- power spectra are,
 %
 \begin{align}
   P_{DD}(\bm{k}) &=
@@ -175,14 +193,8 @@ We decompose the redshift-space power spectrum as,
     \right\rangle,
 \end{align}
 %
-where,
-\begin{align}
-  &u'(\bm{x}) = - \frac{\partial}{\partial z} u(\bm{x}),\\
-  &\bm{r}     = \bm{x} - \bm{y},
-\end{align}
-%
-and $\langle\dots\rangle$ is the ensemble average. The ensemble
-averages gives a function of $\bm{r}$ due to the statistical
+The angle bracket, $\langle\dots\rangle$ is the ensemble average. The
+ensemble averages gives a function of $\bm{r}$ by statistical
 translational invariance.
 
 \vspace{10mm}
@@ -273,13 +285,6 @@ The reality of the covariance,
 \end{equation}
 
 follows from the statistical parity invariance. 
-
-\textsc{Proposition}
-%
-\begin{align}
-  \left\langle U(\bm{k}) \right\rangle = 0,\\
-  \left\langle D(\bm{k}) \right\rangle = 0
-\end{align}
 
 
 \newpage
@@ -928,6 +933,45 @@ Note,
 %
 which makes the integrand of equation~(\ref{eq:puu-exact}) converge to
 zero as $k \rightarrow \infty$.
+
+
+%
+% dduu statistics
+%
+\clearpage
+\section{Weighted velocity dispersion}
+
+\begin{equation}
+  \sigma_{ab}^2(\bm{k}) = -\frac{1}{2} k_z^2 \int\! d^3 r\,
+    e^{-i\bm{k}\cdot\bm{r}} \left\langle
+    \phi_a(\bm{x}) \phi_b(\bm{y}) (\Delta u)^2
+  \right\rangle
+\end{equation}
+
+
+\subsection{Measuring the statistics in a simulation}
+
+The data particles and the random particles correspond to $1 +
+\delta(x)$ and $1$, respectively. Therefore the higher-order statistics
+can be computed by Laday-Szaley-like estimators,
+
+\begin{align}
+  &\left\langle \delta(\bm{x}) \delta(\bm{y}) (\Delta u)^2 \right\rangle
+    = \frac{DD (\Delta u)^2 - 2 DR (\Delta u)^2 + RR (\Delta u)^2}{RR},\\
+  &\left\langle \delta(\bm{x}) (\Delta u)^2 \right\rangle
+    = \frac{DR (\Delta u)^2 - RR (\Delta u)^2}{RR},\\
+  &\left\langle (\Delta u)^2 \right\rangle
+    = \frac{RR (\Delta u)^2}{RR},
+\end{align}
+which reflect,
+\begin{align}
+  &\delta(\bm{x})\delta(\bm{y})
+    = [ 1 + \delta(\bm{x}) ][ 1 + \delta(\bm{y}) ]
+      - \left\{ [ 1 + \delta(\bm{x}) ] + [ 1 + \delta(\bm{y}) ] \right\} + 1,\\
+  &\delta(\bm{x})
+    = [ 1 + \delta(\bm{x}) ] - 1.
+\end{align}
+
 
 \clearpage
 %
