@@ -1,5 +1,6 @@
 import os
 import json
+import glob
 
 #
 # Global configuration
@@ -18,6 +19,16 @@ def dirs(path):
     return sorted([x for x in os.listdir(path)
                    if os.path.isdir(path + '/' + x)])
 
+def list_isnp(subdir):
+    path = '%s/%s' % (_data_dir, subdir)
+    isnps = sorted([x for x in os.listdir(path)
+                   if os.path.isdir(path + '/' + x)])
+
+    if len(isnps) == 0 and raise_error:
+        raise FileNotFoundError('snapshots not found in %s/%s' %
+                                (_data_dir, subdir))
+
+    return isnps
 
 def check_isnp(path, isnp):
     """Check if isnp is a valid snapshot index in a given path
@@ -66,8 +77,6 @@ def load_param(sim, isnp=None):
     Return simulation info
     """
 
-    #data_dir = lambdalib.util.data_dir()
-    #data_dir = data_dir()
     check_sim(sim)
 
     with open('%s/%s/param.json' % (_data_dir, sim)) as f:
