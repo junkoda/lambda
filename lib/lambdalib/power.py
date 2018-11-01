@@ -198,3 +198,83 @@ def load_bias(sim, isnp):
     d['summary'] = summary
 
     return d
+
+def load_theta_power_bell_model(sim, isnp, *, Pdd=None):
+    """
+    Density- Velocity-divergence cross power using Bell et al. formula
+
+    Args:
+      sim (str): simulation name
+      isnp (str): snapshot index
+      kdd (array): wavenumber k for Pdd
+      Pdd (dict): Non-linear Pdd(k) dictionary with 'k' and 'P'
+
+    Returns:
+      d['k']: wavenumber kdd if provided, linear['k'] otherwise
+      d['Pdd']: Pdd if provided, linear['P'] otherwise
+      d['Pdt']: P_delta_theta
+      d['Ptt']: P_theta_theta
+
+    Reference:
+      Bell et al. https://arxiv.org/abs/1809.09338
+    """
+
+    lambdalib.util.check_sim(sim)
+    
+    param = lambdalib.util.load_param(sim)
+    D = param['snapshot'][isnp]['D']
+    sigma8 = D*param['sigma_8']
+
+    a1 = -0.817 + 3.198*sigma8
+    a2 = -0.877 - 4.191*sigma8
+    a3 = -1.199 + 4.629*sigma8
+    kd_inv = -0.111 + 3.811*sigma8**2
+    b = 0.091 + 0.702*sigma8
+    #kt_inv = -0.048 + 1.917*sigma8**2
+
+    linear = load_linear_power(sim, isnp)
+
+
+    if Pdd is None:
+        Pdd = D**2*linear['P']
+        k = linear['k']
+        P = D**2*linear['P']
+    else:
+        from scipy.interpolate import interp1d
+
+        if not ('k' in Pdd and 'P' in Pdd):
+            raise ValueError("Pdd must containt 'k' and 'P'")
+
+        k = Pdd['k']
+        Pdd = Pdd['P']
+        P = interp1d(linear['k'], linear['P'])(k)
+
+    
+    d = {}
+    d['k'] = k
+    d['Pdd'] = Pdd
+    d['Pdt'] = np.sqrt(Pdd*P)*np.exp(-k*kd_inv - b*k**6)
+    d['Ptt'] = P*np.exp(-k*(a1 + a2*k + a3*k**2))
+
+    return d
+
+def load_halofit_power(sim, isnp):
+    """
+    Args:
+      sim (str): simulation name
+      isnp (str, int): snasphot index
+    """
+    lambdalib.util.check_sim(sim)
+
+    isnp = lambdalib.util.isnp_str(isnp)
+
+    data_dir = lambdalib.util.data_dir()
+    
+    filename = '%s/%s/power_spectrum/%s/halofit_matterpower.dat' % (data_dir, sim, isnp)
+    a = np.loadtxt(filename)
+    
+    d = {}
+    d['k'] = a[:, 0]
+    d['P'] = a[:, 1]
+
+    return d
