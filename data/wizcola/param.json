@@ -3,6 +3,7 @@
     "type": "halo",
     "omega_m": 0.273,
     "boxsize": 600,
+    "sigma_8": 0.812,
     "sigma_v1": 6.059672472275335,
     "snapshot": {"000": {"redshift": 4.00,
 			 "a": 2.000000000000000e-01,

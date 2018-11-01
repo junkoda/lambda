@@ -3,6 +3,7 @@
     "type": "particle",
     "omega_m": 0.308,
     "boxsize": 1000,
+    "sigma_8": 0.815,
     "sigma_v1": 1.0,
     "snapshot": {"000": {"redshift": 4.00,
 			 "a": 2.000000000000000e-01,
