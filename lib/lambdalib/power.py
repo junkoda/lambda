@@ -15,7 +15,9 @@ def load_linear_power(sim, isnp=None):
       dictionary with
       'k': wavenumbeer [h/Mpc]
       'P': linear power spectrum [1/h Mpc]^3
-      'interp': interpolation function P(k)
+      'P_nowiggle': no wiggle power spectrum   
+      'interp'['linear']: interpolation function P(k)
+      'interp'['nowiggle']: interpolation function P_nowiggle(k)
     """
 
     data_dir = lambdalib.util.data_dir()
@@ -27,13 +29,22 @@ def load_linear_power(sim, isnp=None):
     d['k'] = a[:, 0]
     d['P'] = a[:, 1]
 
+    filename = '%s/%s/power_spectrum/nowiggle_matterpower.dat' % (data_dir, sim)
+    nowiggle = np.loadtxt(filename)
+
+    assert(np.all(nowiggle[:, 0] == a[:, 0]))
+    d['P_nowiggle'] = nowiggle[:, 1]
+
     if isnp is not None:
         param = lambdalib.util.load_param(sim, isnp)
         d['P'] *= param['D']**2
 
     try:
         from scipy.interpolate import interp1d
-        d['interp'] = interp1d(d['k'], d['P'], kind='cubic')
+        d['interp'] = {}
+        d['interp']['linear'] = interp1d(d['k'], d['P'], kind='cubic')
+        d['interp']['nowiggle'] = interp1d(nowiggle[:, 0], nowiggle[:, 1],
+                                           kind='cubic')
     except ImportError:
         print('Warning: scipy.interpolate unabailable '
               'for linear power interpolation.')
@@ -226,24 +237,24 @@ def load_theta_power_bell_model(sim, isnp, *, Pdd=None):
     sigma8 = D*param['sigma_8']
 
     a1 = -0.817 + 3.198*sigma8
-    a2 = -0.877 - 4.191*sigma8
+    a2 = 0.877 - 4.191*sigma8
     a3 = -1.199 + 4.629*sigma8
     kd_inv = -0.111 + 3.811*sigma8**2
     b = 0.091 + 0.702*sigma8
-    #kt_inv = -0.048 + 1.917*sigma8**2
+    kt_inv = -0.048 + 1.917*sigma8**2
 
     linear = load_linear_power(sim, isnp)
 
 
     if Pdd is None:
-        Pdd = D**2*linear['P']
+        Pdd = linear['P']
         k = linear['k']
-        P = D**2*linear['P']
+        P = linear['P']
     else:
         from scipy.interpolate import interp1d
 
         if not ('k' in Pdd and 'P' in Pdd):
-            raise ValueError("Pdd must containt 'k' and 'P'")
+            raise ValueError("dict Pdd must containt 'k' and 'P'")
 
         k = Pdd['k']
         Pdd = Pdd['P']
@@ -255,6 +266,7 @@ def load_theta_power_bell_model(sim, isnp, *, Pdd=None):
     d['Pdd'] = Pdd
     d['Pdt'] = np.sqrt(Pdd*P)*np.exp(-k*kd_inv - b*k**6)
     d['Ptt'] = P*np.exp(-k*(a1 + a2*k + a3*k**2))
+    #d['Ptt'] = P*np.exp(-k*kt_inv)
 
     return d
 
