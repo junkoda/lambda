@@ -47,8 +47,9 @@ def load_corr_dduu(sim, isnp):
         xi[:, :, i] = a
 
     dat = [('dd', 1), ('ww0', 2), ('ww2', 3), ('uu0', 4), ('uu2', 5),
-           ('ddww0', 7), ('ddww2', 8), ('dduu0', 9), ('dduu2', 10),
-           ('du1', 11), ('du3', 12)]
+           ('ddww0', 7), ('ddww2', 8), ('dduu4', 9),
+           ('dduu0', 10), ('dduu2', 11),
+           ('du1', 12), ('du3', 13)]
     
     d = {}
     summary = {}
@@ -69,6 +70,39 @@ def load_corr_dduu(sim, isnp):
     return d
 
 
+def load_corr_model(sim, isnp, kind='linear'):
+    """
+    Args:
+      sim (str): simulation name
+      isnp (str): snapshot index
 
-
+    Returns:
+      d (dict)
+      d['r']: r [1/h Mpc]
+      d['xi0']:    xi(r) = <delta(x) delta(y)> monopole
+      d['xi_uu0']: <u(x)u(y)> monopole
+      d['xi_uu2']: <u(x)u(y)> quadrupole
+    """
     
+    lambdalib.util.check_sim(sim)
+    data_dir = lambdalib.util.data_dir()
+    isnp = lambdalib.util.isnp_str(isnp)
+    param = lambdalib.util.load_param(sim, isnp)
+    fac_dd = param['D']**2
+    fac_du = param['f']*param['D']**2
+    fac_uu = (param['f']*param['D'])**2
+
+    if kind == 'linear':
+        filename = '%s/%s/correlation_functions/corr_linear.txt' % (data_dir, sim)
+        a = np.loadtxt(filename)
+    else:
+        raise ValueError('Unknown corr model: %s' % kind)
+
+    d = {}
+    d['r'] = a[:, 0]
+    d['xi'] = fac_dd*a[:, 1]
+    d['xi_du1'] = fac_du*a[:, 2]
+    d['xi_uu0'] = fac_uu*a[:, 4]
+    d['xi_uu2'] = fac_uu*a[:, 5]
+
+    return d
