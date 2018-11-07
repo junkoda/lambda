@@ -13,10 +13,10 @@ import h5py
 import json
 
 from lambdalib.lambda_fitting import fit_lambda
-import lambdalib.characteristic_function
+from lambdalib.characteristic_function import load_characteristic_function
 import lambdalib.util
 from lambdalib.util import load_param
-from lambdalib.taruya import TaruyaModel
+from lambdalib.taruya import TaruyaModel, load_taruya
 from lambdalib.power import load_linear_power, load_matter_power, load_halo_power, load_theta_power, load_bias, load_theta_power_bell_model, load_halofit_power
 from lambdalib.dtfe import load_dtfe_A
 from lambdalib.sigma import load_sigma_ab
@@ -103,25 +103,3 @@ def load_lambda(sim, isnp):
 
         
     return d
-        
-
-    
-def load_characteristic_function(sim, isnp):
-    """
-    Load characteristic function data
-
-    Args:
-      sim (str): wizcola, wizcola_particles, nbody
-      isnp (str): snapshot index
-    """
-
-    lambdalib.util.check_sim(sim)
-    data_dir = lambdalib.util.data_dir()
-    
-    isnp = _isnp_str(isnp)
-
-    path = '%s/%s/characteristic_function' % (data_dir, sim)
-
-    return lambdalib.characteristic_function.load(path, isnp)
-
-
