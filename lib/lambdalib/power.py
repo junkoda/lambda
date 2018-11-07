@@ -290,3 +290,23 @@ def load_halofit_power(sim, isnp):
     d['P'] = a[:, 1]
 
     return d
+
+def compute_sigma_v(sim, isnp):
+    """
+    compute linar sigma_v = \int P(k) dk/(6 pi^2)
+    """
+    lambdalib.util.check_sim(sim)
+    
+    linear = load_linear_power(sim, None)
+    param = lambdalib.util.load_param(sim, isnp)
+    fac = param['f']*param['D']
+
+    k = linear['k']
+    P = linear['P']
+    dk = k[1:] - k[:-1]
+
+    # Trapezoidal integral
+    sigma2v = 0.5*np.sum((P[1:] + P[:-1])*(k[1:] - k[:-1]))/(6.0*math.pi**2)
+
+    return fac*math.sqrt(sigma2v)
+
