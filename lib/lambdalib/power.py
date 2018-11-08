@@ -296,10 +296,14 @@ def compute_sigma_v(sim, isnp):
     compute linar sigma_v = \int P(k) dk/(6 pi^2)
     """
     lambdalib.util.check_sim(sim)
-    
+
     linear = load_linear_power(sim, None)
-    param = lambdalib.util.load_param(sim, isnp)
-    fac = param['f']*param['D']
+    
+    if isnp is None:
+        fac = 1.0
+    else:
+        param = lambdalib.util.load_param(sim, isnp)
+        fac = param['f']*param['D']
 
     k = linear['k']
     P = linear['P']
