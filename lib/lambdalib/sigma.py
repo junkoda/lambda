@@ -19,14 +19,15 @@ def load_sigma_ab(sim, isnp=None):
       d (dict)
       d['k']: wavenumber
       d['P']: linear P(k)
-      d['sigma_DD(0)'] sigma_DD monopole C_DD(0)/P
-      d['sigma_DD(2)'] sigma_DD quadrupole
-      d['sigma_DU(0)'] sigma_DU monopole
-      d['sigma_DU(2)'] sigma_DU quadrupole
-      d['sigma_DU(4)'] sigma_DU hexadecapole
-      d['mu2_sigma_UU(0)'] mu^2 sigma_DU monopole
-      d['mu2_sigma_UU(2)'] mu^2 sigma_DU quadrupole
-      d['mu2_sigma_UU(4)'] mu^2 sigma_DU hexadecapole
+      d['sigma2_v']     sigma2_v = <u(x)^2>
+      d['sigma2_DD(0)'] sigma_DD monopole C_DD(0)/P
+      d['sigma2_DD(2)'] sigma_DD quadrupole
+      d['sigma2_DU(0)'] sigma_DU monopole
+      d['sigma2_DU(2)'] sigma_DU quadrupole
+      d['sigma2_DU(4)'] sigma_DU hexadecapole
+      d['mu2_sigma2_UU(0)'] mu^2 sigma_DU monopole
+      d['mu2_sigma2_UU(2)'] mu^2 sigma_DU quadrupole
+      d['mu2_sigma2_UU(4)'] mu^2 sigma_DU hexadecapole
     """
     lambdalib.util.check_sim(sim)
     
