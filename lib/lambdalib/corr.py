@@ -31,7 +31,7 @@ def load_corr_dduu(sim, isnp):
 
     isnp=lambdalib.util.isnp_str(isnp)
 
-    filenames = glob.glob('%s/%s/correlation_functions/dduu/%s/corr_dduu_*.txt' % (data_dir, sim, isnp))
+    filenames = sorted(glob.glob('%s/%s/correlation_functions/dduu/%s/corr_dduu_*.txt' % (data_dir, sim, isnp)))
 
     if not filenames:
         raise FileNotFoundError('No corr_dduu files in %s/%s/correlation_functions/dduu/%s/' % (data_dir, sim, isnp))
