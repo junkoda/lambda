@@ -314,3 +314,42 @@ def compute_sigma_v(sim, isnp):
 
     return fac*math.sqrt(sigma2v)
 
+def load_halo_nbar(sim, isnp):
+    """
+    load number density of haloes
+    """
+
+    data_dir = lambdalib.util.data_dir()
+    filename = '%s/%s/halo_power/%s/halo_power_*.txt' % (data_dir, sim, isnp)
+
+    filenames = glob.glob(filename)
+
+    if not filenames:
+        raise FileNotFoundError('halo power spectrum not found: %s' %
+                                file_pattern)
+
+    filenames = sorted(filenames)
+
+    n = len(filenames)
+    nbar = np.empty(n)
+
+    for i, filename in enumerate(filenames):
+        for line in open(filename, 'r'):
+            if line[0] != '#':
+                raise OSError('nbar not found in %s' % filename)
+
+            v = line.rstrip().split()
+            if v[1] == 'nbar':
+                nbar[i] = float(v[2])
+                break
+
+    summary = {}
+    summary['nbar'] = np.mean(nbar)
+    summary['dnbar'] = np.std(nbar)
+
+    d = {}
+    d['summary'] = summary
+    d['nbar'] = nbar
+
+    return d
+        
