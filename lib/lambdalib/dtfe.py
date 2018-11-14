@@ -26,6 +26,11 @@ def load_dtfe_A(sim, isnp):
     # Convert velocity vz to RSD displacemennt u = vz/aH
     aH = params['a']*params['H']
 
+    if sim == 'nbody':
+        aH /= math.sqrt(params['a']) # sqrt(a) in Gadget snasphot
+    
+
+
     data_dir = lambdalib.util.data_dir()
 
     filenames = glob.glob('%s/%s/dtfe_A/%s/taruya_bispectrum_*.h5' %
@@ -55,6 +60,10 @@ def load_dtfe_A(sim, isnp):
             ADU[:, :, i] = f['Adu'][:]/aH**2
             AUU[:, :, i] = f['Auu'][:]/(aH**3)
 
+    if sim == 'nbody':
+        ADD *= 2.0
+        AUU *= 2.0
+            
     summary = {}
     summary['ADD'] = np.mean(ADD, axis=2)
     summary['ADU'] = np.mean(ADU, axis=2)
