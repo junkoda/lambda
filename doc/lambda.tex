@@ -972,6 +972,69 @@ which reflect,
     = [ 1 + \delta(\bm{x}) ] - 1.
 \end{align}
 
+\clearpage
+\section{Power spectrum multipoles}
+
+\subsection{Discrete Legendre polynomials}
+
+Define an integral,
+\begin{equation}
+  \int_{-1}^1 f(\mu) d\tilde{\mu} \equiv \frac{1}{N_\mathrm{modes}} \sum f_i(\mu_i)
+\end{equation}
+for discrete $\mu$s in 3D $k$ shell, where $N_\mathrm{modes}$ is the
+number of independent modes in the shell.
+\begin{equation}
+  \sum_i 1 = 2 N_\mathrm{modes}
+\end{equation}
+because only half of the Fourier modes are independent due to the
+reality condition.\\
+
+We find \textit{discrete Legendre polynomials} that satisfy,\\
+%
+(i) $\tilde{\mathcal{P}}_\ell(\mu)$ is a polynomial of order $\ell$.
+\begin{equation}
+  \tilde{\mathcal{P}}_\ell(\mu) = \frac{1}{\mathcal{N}_{(\ell)}} \left(1 + a_2^{(\ell)} \mu^2 + \cdots
+  + a_\ell^{(\ell)} \mu^\ell \right)
+\end{equation}
+(ii) $\mathcal{N}_\ell^{-1} a_\ell^{(\ell)} > 0$\\
+(iii) 
+%
+\begin{equation}
+  \int_{-1}^1 \mu^n \tilde{\mathcal{P}}_\ell(\mu) d\tilde{\mu} = 0
+\end{equation}
+%
+for any non-negative integer $n < \ell$.\\
+(iv)
+\begin{equation}
+  \int_{-1}^1 \tilde{\mathcal{P}}_\ell(\mu)^2 \tilde{\mu} = \frac{2}{2\ell + 1}
+\end{equation}
+%
+\begin{equation}
+  \tilde{\mathcal{P}}_0 = 1
+\end{equation}
+
+\begin{equation}
+  \langle f(\mu) \rangle \equiv \frac{1}{2N_\mathrm{modes}}\sum_i f(\mu_i)
+\end{equation}
+
+\begin{equation}
+  1 + a_2^{(2)} \langle \mu^2 \rangle = 0
+\end{equation}
+
+\begin{equation}
+  \mathcal{N}_{(2)}^2 = 5 \langle ( 1 + a_{2(2)} \mu^2)^2 \rangle.
+\end{equation}
+
+The linear equation,
+\begin{align}
+  &1 + a_{2(4)} \langle \mu^2 \rangle + a_{4(4)} \langle \mu^4\rangle = 0,\\
+  &1 + a_{2(4)} \langle \mu^4 \rangle + a_{4(4)} \langle \mu^6 \rangle = 0
+\end{align}
+gives $a_{2(4)}$ and $a_{4(4)}$, and
+\begin{equation}
+  \mathcal{N}_{(4)}^2 = 9 \left\langle (1 + a_{2(4)}\mu^2 + a_{4(4)}\mu^4)^2 \right\rangle.
+\end{equation}
+  
 
 \clearpage
 %
