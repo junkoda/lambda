@@ -53,6 +53,10 @@ def load_linear_power(sim, isnp=None):
 
 
 def _load_power(file_pattern, isnp):
+    """
+    Load power spectrum ascii file of format
+    k nmodes P0 [P2 P4]
+    """
     filenames = glob.glob(file_pattern)
 
     if not filenames:
@@ -72,33 +76,65 @@ def _load_power(file_pattern, isnp):
 
         P[:, :, i] = a
 
-    summary = {}
-    summary['P'] = np.mean(P[:, 2, :], axis=1)
-    summary['dP'] = np.std(P[:, 2, :], axis=1)/math.sqrt(n)
-    
     d = {}
+    summary = {}
+
+    if P.shape[1] == 3: # monopole only
+        summary['P'] = np.mean(P[:, 2, :], axis=1)
+        summary['dP'] = np.std(P[:, 2, :], axis=1)/math.sqrt(n)
+        d['P'] = P[:, 2, :]
+    elif P.shape[1] == 5: # P0, P2, P4
+        for l, i in [('0', 2), ('2', 3), ('4', 4)]:
+            summary['P' + l] = np.mean(P[:, i, :], axis=1)
+            summary['dP' + l] = np.std(P[:, i, :], axis=1)/math.sqrt(n)
+
+        d['P0'] = P[:, 2, :]
+        d['P2'] = P[:, 3, :]
+        d['P4'] = P[:, 4, :]
+    else:
+        raise OSError('Unknown number of columns for power spectrum: %d'
+                      % P.shape[1])
+
+    summary['nmodes'] = np.sum(P[:, 1, :], axis=1)
     d['k'] = P[:, 0, 0]
     d['nmodes'] = P[:, 1, 0]
-    d['P'] = P[:, 2, :]
     d['summary'] = summary
 
     return d
 
     
-def load_halo_power(sim, isnp):
+def load_halo_power(sim, isnp, kind='real_space'):
     """
     Read real-space halo power spectrum
+
+    Args:
+      kind = 'real_space', 'zspace', or 'zspace_conventional_legendre'
+      'zspace' is discrete Legendre Multipoles
 
     Returns: d (dict)
       d['summary']['P'] (array): P[ik] mean power spectrum
       d['summary']['dP'] (array): dP[ik] standard error in the mean
+      d['summary']['nmodes'] (array): nmodes[ik]: number of independent
+                                      modes; sum of all realisations
       d['P'] (array): 'P[ik, irealisation]' array of all realisations 
       d['k'] (array): wavenumber [h/Mpc]
-      d['nmodes']: number of k modes in bins
+      d['nmodes']: number of independent k modes in bins
+
+      For zspace,
+        P0, P2, P4, and, dP0, dP2, dP4 instead of P and dP
     """
 
     data_dir = lambdalib.util.data_dir()
-    filename = '%s/%s/halo_power/%s/halo_power_*.txt' % (data_dir, sim, isnp)
+
+    
+    if kind == None:
+        filename = '%s/%s/halo_power/%s/halo_power_*.txt' % (data_dir, sim, isnp)
+    elif (kind == 'real_space' or kind == 'zspace'
+          or kind == 'zspace_conventional_legendre'):
+        filename = '%s/%s/halo_power/%s/%s/halo_power_*.txt' % (data_dir, sim, kind, isnp)
+    else:
+        raise ValueError('Unknown kind of halo power: %s' % kind)
+
 
     return _load_power(filename, isnp)
 
