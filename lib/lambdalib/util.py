@@ -2,11 +2,20 @@ import os
 import json
 import glob
 
+try:
+    import lambdalib.lambdalib_dir
+    _lambda_dir = lambdalib.lambdalib_dir._lambda_dir
+except ImportError:
+    _lambda_dir = None
+
 #
 # Global configuration
 #
-_this_dir = os.path.dirname(os.path.realpath(__file__))
-_lambda_dir = os.path.abspath(_this_dir + '/../..')
+
+if _lambda_dir is None:
+    _this_dir = os.path.dirname(os.path.realpath(__file__))
+    _lambda_dir = os.path.abspath(_this_dir + '/../..')
+
 _data_dir = _lambda_dir + '/data'
 
 def lambda_dir():
