@@ -246,15 +246,21 @@ def load_bias(sim, isnp):
 
     return d
 
-def load_theta_power_bell_model(sim, isnp, *, Pdd=None):
+def load_theta_power_bell_model(sim, isnp, *, kind='default',
+                                Pdd=None, linear=None):
+                                
     """
     Density- Velocity-divergence cross power using Bell et al. formula
 
     Args:
       sim (str): simulation name
       isnp (str): snapshot index
-      kdd (array): wavenumber k for Pdd
-      Pdd (dict): Non-linear Pdd(k) dictionary with 'k' and 'P'
+      Pdd (dict): [optional] Non-linear Pdd(k, z) dictionary with 'k' and 'P'
+                  linear is used if not provided
+      linear (dict): [optional] linear P(k, z) dictionary with 'k' and 'P'
+                  linear is loaded if not provided
+      kind (str): 'default'
+                  'simple': simpler model of Ptt with exp only
 
     Returns:
       d['k']: wavenumber kdd if provided, linear['k'] otherwise
@@ -267,6 +273,10 @@ def load_theta_power_bell_model(sim, isnp, *, Pdd=None):
     """
 
     lambdalib.util.check_sim(sim)
+
+    if not (kind == 'default' or kind == 'simple'):
+        raise ValueError('Unknown kind of Bell model.'
+                         "Must be 'default' or 'simple': %s" % kind)
     
     param = lambdalib.util.load_param(sim)
     D = param['snapshot'][isnp]['D']
@@ -279,7 +289,11 @@ def load_theta_power_bell_model(sim, isnp, *, Pdd=None):
     b = 0.091 + 0.702*sigma8
     kt_inv = -0.048 + 1.917*sigma8**2
 
-    linear = load_linear_power(sim, isnp)
+    if linear is None:
+        linear = load_linear_power(sim, isnp)
+
+    if not ('k' in Pdd and 'P' in Pdd):
+        raise ValueError("dict linear must containt 'k' and 'P'")
 
 
     if Pdd is None:
@@ -294,15 +308,19 @@ def load_theta_power_bell_model(sim, isnp, *, Pdd=None):
 
         k = Pdd['k']
         Pdd = Pdd['P']
-        P = interp1d(linear['k'], linear['P'])(k)
+        P = interp1d(linear['k'], linear['P'], kind='cubic')(k)
 
     
     d = {}
     d['k'] = k
     d['Pdd'] = Pdd
     d['Pdt'] = np.sqrt(Pdd*P)*np.exp(-k*kd_inv - b*k**6)
-    d['Ptt'] = P*np.exp(-k*(a1 + a2*k + a3*k**2))
-    #d['Ptt'] = P*np.exp(-k*kt_inv)
+    d['kind'] = kind
+    
+    if kind == 'simple':
+        d['Ptt'] = P*np.exp(-k*kt_inv)
+    else:
+        d['Ptt'] = P*np.exp(-k*(a1 + a2*k + a3*k**2))
 
     return d
 
