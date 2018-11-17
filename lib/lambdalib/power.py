@@ -52,11 +52,16 @@ def load_linear_power(sim, isnp=None):
     return d
 
 
-def _load_power(file_pattern, isnp):
+def _load_power(file_pattern, isnp, kind=None):
     """
     Load power spectrum ascii file of format
     k nmodes P0 [P2 P4]
     """
+
+    if kind is not None:
+        if not (kind == 'realspace' or kind == 'zspace'):
+            raise ValueError('Unknown kind of power spectrum data: %s' % kind)
+    
     filenames = glob.glob(file_pattern)
 
     if not filenames:
@@ -79,11 +84,11 @@ def _load_power(file_pattern, isnp):
     d = {}
     summary = {}
 
-    if P.shape[1] == 3: # monopole only
+    if kind == 'realspace' or P.shape[1] == 3: # monopole only
         summary['P'] = np.mean(P[:, 2, :], axis=1)
         summary['dP'] = np.std(P[:, 2, :], axis=1)/math.sqrt(n)
         d['P'] = P[:, 2, :]
-    elif P.shape[1] == 5: # P0, P2, P4
+    elif kind == 'zspace' or P.shape[1] == 5: # P0, P2, P4
         for l, i in [('0', 2), ('2', 3), ('4', 4)]:
             summary['P' + l] = np.mean(P[:, i, :], axis=1)
             summary['dP' + l] = np.std(P[:, i, :], axis=1)/math.sqrt(n)
@@ -153,7 +158,7 @@ def load_matter_power(sim, isnp):
     data_dir = lambdalib.util.data_dir()
     filename = '%s/%s/matter_power/%s/matterpower_*.txt' % (data_dir, sim, isnp)
 
-    return _load_power(filename, isnp)
+    return _load_power(filename, isnp, 'realspace')
     
 
 def load_theta_power(sim, isnp):
@@ -238,6 +243,7 @@ def load_bias(sim, isnp):
     summary = {}
     summary['b'] = np.mean(b, axis=1)
     summary['db'] = np.std(b, axis=1)/math.sqrt(n)
+    summary['b_linear'] = np.mean(summary['b'][halo['k'] < 0.1])
 
     d = {}
     d['k'] = halo['k']
@@ -342,6 +348,14 @@ def load_halofit_power(sim, isnp):
     d = {}
     d['k'] = a[:, 0]
     d['P'] = a[:, 1]
+
+    try:
+        from scipy.interpolate import interp1d
+        d['interp'] = interp1d(d['k'], d['P'], kind='cubic')
+    except ImportError:
+        print('Warning: scipy.interpolate unabailable '
+              'for linear power interpolation.')
+
 
     return d
 
