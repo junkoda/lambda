@@ -4,7 +4,7 @@
 
 import numpy as np
 import json
-
+from numbers import Number
 import lambdalib.util
 
 
@@ -43,35 +43,60 @@ class TaruyaModel:
         self.a = a
 
     def ADD(self, isnp, mu):
-        assert(0.0 <= mu <= 1.0)
+        assert(np.all(0.0 <= mu) and np.all(mu <= 1.0))
         fac = self.param[isnp]['f']*self.param[isnp]['D']**4
-        return fac*mu**2*self.A11
+
+        if isinstance(mu, Number):
+            return fac*mu**2*self.A11
+
+        return fac*np.outer(self.A11, mu**2)
 
     def ADU(self, isnp, mu):
-        assert(0.0 <= mu <= 1.0)
+        assert(np.all(0.0 <= mu) and np.all(mu <= 1.0))
         fac = 0.5*self.param[isnp]['f']**2*self.param[isnp]['D']**4
-        return fac*mu**2*(self.A12 + mu**2*self.A22)
+
+        if isinstance(mu, Number):
+            return fac*mu**2*(self.A12 + mu**2*self.A22)
+
+        return fac*(np.outer(self.A12, mu**2) + np.outer(self.A22, mu**4))
 
     def AUU(self, isnp, mu):
-        assert(0.0 <= mu <= 1.0)
+        assert(np.all(0.0 <= mu) and np.all(mu <= 1.0))
         fac = self.param[isnp]['f']**3*self.param[isnp]['D']**4
-        return fac*mu**4*(self.A23 + mu**2*self.A33)
+
+        if isinstance(mu, Number):
+            return fac*mu**4*(self.A23 + mu**2*self.A33)
+        return fac*(np.outer(self.A23, mu**4) + np.outer(self.A33, mu**6))
 
     def BDD(self, isnp, mu):
-        assert(0.0 <= mu <= 1.0)
+        assert(np.all(0.0 <= mu) and np.all(mu <= 1.0))
         fac = self.param[isnp]['f']**2*self.param[isnp]['D']**4
-        return fac*mu**2*(self.B111 + mu**2*self.B211)
+
+        if isinstance(mu, Number):
+            return fac*mu**2*(self.B111 + mu**2*self.B211)
+        return fac*(np.outer(self.B111, mu**2) + np.outer(self.B211, mu**4))
+        
 
     def BDU(self, isnp, mu):
-        assert(0.0 <= mu <= 1.0)
+        assert(np.all(0.0 <= mu) and np.all(mu <= 1.0))
         fac = -0.5*self.param[isnp]['f']**3*self.param[isnp]['D']**4
-        return fac*(mu**2*self.B112 + mu**4*self.B212 + mu**6*self.B312)
+
+        if isinstance(mu, Number):
+            return fac*(mu**2*self.B112 + mu**4*self.B212 + mu**6*self.B312)
+
+        return fac*(np.outer(self.B112, mu**2) + np.outer(self.B212, mu**4)
+                    + np.outer(self.B312, mu**6))
         
     def BUU(self, isnp, mu):
-        assert(0.0 <= mu <= 1.0)
+        assert(np.all(0.0 <= mu) and np.all(mu <= 1.0))
         fac = self.param[isnp]['f']**4*self.param[isnp]['D']**4
-        return fac*(mu**2*self.B122 + mu**4*self.B222 +
-                    mu**6*self.B322 + mu**8*self.B422)
+
+        if isinstance(mu, Number):
+            return fac*(mu**2*self.B122 + mu**4*self.B222 +
+                        mu**6*self.B322 + mu**8*self.B422)
+
+        return fac*(np.outer(self.B122, mu**2) + np.outer(self.B222, mu**4) +
+                    np.outer(self.B322, mu**6) + np.outer(self.B422, mu**8))
 
 
 def load_taruya(sim, isnp):
