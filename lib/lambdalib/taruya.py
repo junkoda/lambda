@@ -9,12 +9,15 @@ import lambdalib.util
 
 
 class TaruyaModel:
-    def __init__(self, sim):
+    def __init__(self, sim, *, dk=None):
         lambdalib.util.check_sim(sim)
         data_dir = lambdalib.util.data_dir()
 
         # Load Taruya AB data
-        filename = '%s/%s/taruyaAB.txt' % (data_dir, sim)
+        if dk is None:
+            filename = '%s/%s/taruyaAB.txt' % (data_dir, sim)
+        else:
+            filename = '%s/%s/taruyaAB_%s.txt' % (data_dir, sim, str(dk))
 
         # Load param
         with open('%s/%s/param.json' % (data_dir, sim)) as f:
@@ -79,6 +82,7 @@ class TaruyaModel:
 
     def BDU(self, isnp, mu):
         assert(np.all(0.0 <= mu) and np.all(mu <= 1.0))
+        # (-1)^{a + b} sign
         fac = -0.5*self.param[isnp]['f']**3*self.param[isnp]['D']**4
 
         if isinstance(mu, Number):
@@ -99,8 +103,10 @@ class TaruyaModel:
                     np.outer(self.B322, mu**6) + np.outer(self.B422, mu**8))
 
 
-def load_taruya(sim, isnp):
+def load_taruya(sim, isnp, *, dk=None):
     """
+    Load precomputed Taruya AB terms
+
     Args:
       sim (str): simulation name
       isnp (str): simulation index
@@ -110,17 +116,24 @@ def load_taruya(sim, isnp):
       d['k'] (array): k[ik] wavenumber [h/Mpc]
       d['A11'] - d['B422'] (array): A11[ik] Taruya AB terms
         A11, A12, A22, A22, A33
-        B111, B211, B112, B212, B312, B112, B222, B422
-        B112 is for B112 + B121. Same for B212 and B312
+        B111, B211, B112 + B121, B212 + B221, B312 + B321, B112, B222, B422
 
       d['ADD'] - d['BUU'] (function): ADD(mu) returns array ADD(mu)[ik]
         ADD, ADU, AUU, BDD, BDU, BUU
+    
+    Note:
+      The order of Bnab is different from original Taruya's Fortran code output
+      Also, our Bnab does not contain sign (-1)^{a + b}
     """
     lambdalib.util.check_sim(sim)
     data_dir = lambdalib.util.data_dir()
 
     # Load Taruya AB data
-    filename = '%s/%s/taruyaAB.txt' % (data_dir, sim)
+    if dk is None:
+        filename = '%s/%s/taruyaAB.txt' % (data_dir, sim)
+    else:
+        filename = '%s/%s/taruyaAB_%s.txt' % (data_dir, sim, str(dk))
+
     a = np.loadtxt(filename)
 
     d = {}
@@ -134,6 +147,7 @@ def load_taruya(sim, isnp):
     #
     # Data
     #
+    d['AB']   = a
     d['k']    = a[:, 0]
     d['A11']  = a[:, 1]
     d['A12']  = a[:, 2]
