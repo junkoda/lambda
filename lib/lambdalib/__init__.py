@@ -21,6 +21,8 @@ from lambdalib.power import load_linear_power, load_matter_power, load_halo_powe
 from lambdalib.dtfe import load_dtfe_A
 from lambdalib.sigma import load_sigma_ab
 from lambdalib.corr import load_corr_dduu
+import lambdalib.cosmology
+
 
 def _isnp_str(isnp):
     if isinstance(isnp, str):
