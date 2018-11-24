@@ -62,6 +62,7 @@ def load_characteristic_function(sim, isnp):
 
     d = {}
     d['lambda'] = phi[:, 0, 0]
+    d['sigma2_v'] = sigma2_v
     d['summary'] = summary
     d['phi'] = phi
 

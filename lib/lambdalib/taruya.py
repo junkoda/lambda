@@ -111,6 +111,8 @@ def load_taruya(sim, isnp, *, dk=None):
       sim (str): simulation name
       isnp (str): simulation index
 
+      D = f = 1 if isnp=None
+
     Returns:
       d (dict):
       d['k'] (array): k[ik] wavenumber [h/Mpc]
@@ -137,12 +139,16 @@ def load_taruya(sim, isnp, *, dk=None):
     a = np.loadtxt(filename)
 
     d = {}
-    
-    isnp = lambdalib.util.isnp_str(isnp)
-    param = lambdalib.util.load_param(sim, isnp)
-    f = param['f']
-    D = param['D']
-    a[:, 1:] *= param['D']**4
+
+    if isnp is None:
+        f = 1
+        D = 1
+    else:
+        isnp = lambdalib.util.isnp_str(isnp)
+        param = lambdalib.util.load_param(sim, isnp)
+        f = param['f']
+        D = param['D']
+        a[:, 1:] *= param['D']**4
 
     #
     # Data

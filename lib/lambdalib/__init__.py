@@ -18,7 +18,7 @@ import lambdalib.util
 from lambdalib.util import load_param
 from lambdalib.taruya import TaruyaModel, load_taruya
 from lambdalib.power import load_linear_power, load_matter_power, load_halo_power, load_theta_power, load_bias, load_theta_power_bell_model, load_halofit_power, load_halo_nbar
-from lambdalib.dtfe import load_dtfe_A
+from lambdalib.dtfe import load_dtfe_A, load_dtfe_higher_order_multipoles, load_dtfe_higher_order_2d
 from lambdalib.sigma import load_sigma_ab
 from lambdalib.corr import load_corr_dduu
 import lambdalib.cosmology
