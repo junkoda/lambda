@@ -195,11 +195,14 @@ def load_dtfe_higher_order_multipoles(sim, isnp):
     
     for i, filename in enumerate(filenames):
         a = np.loadtxt(filename)
+        
+        # velocity [km/s] to displacement [1/h Mpc]
+        a[:, 3:] /= aH**2
             
         if P is None:
             P = np.empty((a.shape[0], a.shape[1], n))
 
-        P[:, :, i]   = a
+        P[:, :, i] = a
 
     d = {}
     summary = {}
