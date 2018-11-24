@@ -88,9 +88,9 @@ def load_sigma_ab(sim, isnp):
       d['sigma2_v']     sigma2_v = <u(x)^2>
       d['sigma2_DD(0)'] sigma_DD monopole
       d['sigma2_DD(2)'] sigma_DD quadrupole
-      d['sigma2_DU(0)'] sigma_DU monopole
-      d['sigma2_DU(2)'] sigma_DU quadrupole
-      d['sigma2_DU(4)'] sigma_DU hexadecapole
+      d['mu2 sigma2_DU(0)'] mu^2 sigma_DU monopole
+      d['mu2 sigma2_DU(2)'] mu^2 sigma_DU quadrupole
+      d['mu2 sigma2_DU(4)'] mu^2 sigma_DU hexadecapole
       d['mu2_sigma2_UU(0)'] mu^2 sigma_DU monopole
       d['mu2_sigma2_UU(2)'] mu^2 sigma_DU quadrupole
       d['mu2_sigma2_UU(4)'] mu^2 sigma_DU hexadecapole
@@ -98,7 +98,8 @@ def load_sigma_ab(sim, isnp):
       d['sigma2_DD'] (func): sigma_DD(mu) function
 
 
-      sigma2_ab = sigma2_v - b_ab - c_ab
+      sigma2_DD = sigma2_v - b_DD - c_DD
+      mu2 sigma2_DU = mu2 sigma2_v - b_DD - c_DD
     """
     lambdalib.util.check_sim(sim)
     
@@ -164,7 +165,8 @@ def load_sigma_ab(sim, isnp):
     # DU
     #
     # BDU = -0.5*f^3 mu^2 (B112 + mu^2 B212 + mu^4 B312)
-    fac = -0.5*f**3
+    # mu2 bdu = BDU/(f k^2 P)
+    fac = -0.5*f**2
     
     b_du0 = fac*(taruya['B112'][:nk]
                  + (1.0/3.0)*taruya['B212'][:nk]
@@ -179,28 +181,36 @@ def load_sigma_ab(sim, isnp):
     c_du2 = a[:nk, 6]
     c_du4 = a[:nk, 7]
 
-    d['bDU(0)'] = b_du0
-    d['bDU(2)'] = b_du2
-    d['bDU(4)'] = b_du4
-    d['cDU(0)'] = c_du0
-    d['cDU(2)'] = c_du2
-    d['cDU(4)'] = c_du4
+    d['mu2_bDU(0)'] = b_du0
+    d['mu2_bDU(2)'] = b_du2
+    d['mu2_bDU(4)'] = b_du4
+    d['mu2_cDU(0)'] = c_du0
+    d['mu2_cDU(2)'] = c_du2
+    d['mu2_cDU(4)'] = c_du4
 
-    sigma_du0 = sigma2_v - b_du0 - c_du0
+    sigma_du0 = -b_du0 - c_du0
     sigma_du2 = -b_du2 - c_du2
     sigma_du4 = -b_du4 - c_du4
-    d['sigma2_DU(0)'] = sigma_du0
-    d['sigma2_DU(2)'] = sigma_du2
-    d['sigma2_DU(4)'] = sigma_du4
+    d['mu2_sigma2_DU(0)'] = sigma_du0
+    d['mu2_sigma2_DU(2)'] = sigma_du2
+    d['mu2_sigma2_DU(4)'] = sigma_du4
+
+    # sigma_DU(0) does not include sigma2_v
+    # mu2 sigma_DU = mu2 sigma2_v - mu2_sigma2_DU(0) - mu2_sigma2_DU(2) P(2) ...
 
     #
     # UU
     #
     # B and C are computed together
+
+    d['mu2_cUU(0)'] = a[:nk, 8]
+    d['mu2_cUU(2)'] = a[:nk, 9]
+    d['mu2_cUU(4)'] = a[:nk, 10]
+
     
-    d['mu2_sigma2_UU(0)'] = a[:, 8]
-    d['mu2_sigma2_UU(2)'] = a[:, 9]
-    d['mu2_sigma2_UU(4)'] = a[:, 10]
+    d['mu2_sigma2_UU(0)'] = -a[:nk, 8]
+    d['mu2_sigma2_UU(2)'] = -a[:nk, 9]
+    d['mu2_sigma2_UU(4)'] = -a[:nk, 10]
     
     # Legendre polynomials
     P2 = legendre(2)
@@ -208,7 +218,7 @@ def load_sigma_ab(sim, isnp):
 
     # functions of mu
     d['sigma2_DD'] = lambda mu: sigma_dd0 + sigma_dd2*P2(mu)
-    d['sigma2_DU'] = lambda mu: sigma_du0 + sigma_du2*P2(mu) + sigma_du4*P4(mu)
-    d['mu2_sigma2_UU'] = lambda mu: a[:, 8] + a[:, 9]*P2(mu) + a[:, 10]*P4(mu)
+    d['mu2_sigma2_DU'] = lambda mu: sigma2_v*mu**2 + sigma_du0 + sigma_du2*P2(mu) + sigma_du4*P4(mu)
+    d['mu2_sigma2_UU'] = lambda mu: sigma2_v*mu**2 - a[:nk, 8] - a[:nk, 9]*P2(mu) - a[:nk, 10]*P4(mu)
     
     return d
