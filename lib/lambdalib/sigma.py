@@ -3,6 +3,7 @@ import lambdalib.util
 import lambdalib
 from scipy.special import legendre
 
+# DEPRECATED delete once sigma_ab vs gaussian test are done
 def load_streaming_c(sim, isnp=None):
     """
     Returns
@@ -136,7 +137,14 @@ def load_sigma_ab(sim, isnp):
     d['P'] = a[:nk, 1]
     d['sigma2_v'] = a[:nk, 2]
 
-    # compute bDD cDD
+    # mu2 = 1/3 + 2/3 P2
+    # mu4 = 1/5 + 4/7 P2 + 8/35 P4
+
+    #
+    # DD
+    #
+    # BDD = f^2 mu^2 (B111 + mu2 B211)
+
     b_dd0 = f**2*(taruya['B111'][:nk] + (1.0/3.0)*taruya['B211'][:nk])/(k**2*P)
     b_dd2 = f**2*(2.0/3.0)*taruya['B211'][:nk]/(k**2*P)
     c_dd0 = a[:nk, 3]
@@ -147,35 +155,60 @@ def load_sigma_ab(sim, isnp):
     d['cDD(0)'] = c_dd0
     d['cDD(2)'] = c_dd2
 
-    #
-    # compute -kz^2 sigma_ab = (B_ab + C_ab)/P_ab
-    #
-    # BDD = f^2 mu^2 (B111 + mu2 B211)
-    # mu2 = 1/3 + 2/3 P2
-
     sigma_dd0 = sigma2_v - b_dd0 - c_dd0
     sigma_dd2 = -b_dd2 - c_dd2
     d['sigma2_DD(0)'] = sigma_dd0
     d['sigma2_DD(2)'] = sigma_dd2
+
+    #
+    # DU
+    #
+    # BDU = -0.5*f^3 mu^2 (B112 + mu^2 B212 + mu^4 B312)
+    fac = -0.5*f**3
+    
+    b_du0 = fac*(taruya['B112'][:nk]
+                 + (1.0/3.0)*taruya['B212'][:nk]
+                 + (1.0/5.0)*taruya['B312'][:nk])/(k**2*P)
+
+    b_du2 = fac*((2.0/3.0)*taruya['B212'][:nk]
+                 + (4.0/7.0)*taruya['B312'][:nk])/(k**2*P)
+
+    b_du4 = fac*(8.0/35.0)*taruya['B312'][:nk]/(k**2*P)
+
+    c_du0 = a[:nk, 5]
+    c_du2 = a[:nk, 6]
+    c_du4 = a[:nk, 7]
+
+    d['bDU(0)'] = b_du0
+    d['bDU(2)'] = b_du2
+    d['bDU(4)'] = b_du4
+    d['cDU(0)'] = c_du0
+    d['cDU(2)'] = c_du2
+    d['cDU(4)'] = c_du4
+
+    sigma_du0 = sigma2_v - b_du0 - c_du0
+    sigma_du2 = -b_du2 - c_du2
+    sigma_du4 = -b_du4 - c_du4
+    d['sigma2_DU(0)'] = sigma_du0
+    d['sigma2_DU(2)'] = sigma_du2
+    d['sigma2_DU(4)'] = sigma_du4
+
+    #
+    # UU
+    #
+    # B and C are computed together
+    
+    d['mu2_sigma2_UU(0)'] = a[:, 8]
+    d['mu2_sigma2_UU(2)'] = a[:, 9]
+    d['mu2_sigma2_UU(4)'] = a[:, 10]
     
     # Legendre polynomials
     P2 = legendre(2)
-    #P4 = legendre(4)
-    #P6 = legendre(6)
-
-
-
-
-    
-    #d['sigma2_DU(0)'] = a[:, 5]
-    #d['sigma2_DU(2)'] = a[:, 6]
-    #d['sigma2_DU(4)'] = a[:, 7]
-    #d['mu2_sigma2_UU(0)'] = a[:, 8]
-    #d['mu2_sigma2_UU(2)'] = a[:, 9]
-    #d['mu2_sigma2_UU(4)'] = a[:, 10]
+    P4 = legendre(4)
 
     # functions of mu
-
     d['sigma2_DD'] = lambda mu: sigma_dd0 + sigma_dd2*P2(mu)
+    d['sigma2_DU'] = lambda mu: sigma_du0 + sigma_du2*P2(mu) + sigma_du4*P4(mu)
+    d['mu2_sigma2_UU'] = lambda mu: a[:, 8] + a[:, 9]*P2(mu) + a[:, 10]*P4(mu)
     
     return d
