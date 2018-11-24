@@ -32,9 +32,14 @@ def fit_DD(d, ik, imu, f, fit=None, p0=None, ilambda_max=None):
     x = x[idx]
     y = y[idx]
 
+    # initial guess
+    if p0 is None:
+        p0 = [0,]*(f.__code__.co_argcount - 1)
+
+
     # fitting
     try:
-        popt, pcov = curve_fit(f, x, y)
+        popt, pcov = curve_fit(f, x, y, p0=p0)
     except RuntimeError:
         return None
 
