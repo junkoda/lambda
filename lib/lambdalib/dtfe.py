@@ -204,15 +204,15 @@ def load_dtfe_higher_order_multipoles(sim, isnp):
     d = {}
     summary = {}
 
-    for name, icol in [('dd', 2), ('dduu(0)', 3), ('dduu(2)', 4),
+    for name, icol in [('dd', 2), ('du2d(0)', 3), ('du2d(2)', 4),
                        ('dudu(0)', 5), ('dudu(2)', 6)]:
-        d[P + name] = P[:, icol, :]
+        d['P' + name] = P[:, icol, :]
         summary['P' + name] = np.mean(P[:, icol], axis=1)
         summary['dP' + name] = np.std(P[:, icol], axis=1)
 
     d['summary'] = summary
-    d['k'] = a[:, 0, 0]
-    d['nmodes'] = a[:, 1, 0]
+    d['k'] = P[:, 0, 0]
+    d['nmodes'] = P[:, 1, 0]
 
     return d
 
